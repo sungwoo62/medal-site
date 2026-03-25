@@ -60,17 +60,20 @@ export default function QuotePage() {
       }
     }
 
-    const { error: insertErr } = await supabase.from('site_quotes').insert({
-      event_name: form.event_name.trim(),
-      medal_type: form.medal_type,
-      quantity: form.quantity ? parseInt(form.quantity) : null,
-      desired_date: form.desired_date || null,
-      note: form.note.trim() || null,
-      contact_name: form.contact_name.trim(),
-      contact_phone: form.contact_phone.trim(),
-      contact_email: form.contact_email.trim() || null,
+    const noteParts: string[] = []
+    if (form.contact_email.trim()) noteParts.push(`이메일: ${form.contact_email.trim()}`)
+    if (form.note.trim()) noteParts.push(form.note.trim())
+
+    const { error: insertErr } = await supabase.from('quotes').insert({
+      product_name: `[${form.medal_type}] ${form.event_name.trim()}`,
+      customer_name: form.contact_name.trim(),
+      customer_phone: form.contact_phone.trim(),
+      quantity: form.quantity ? parseInt(form.quantity) : 1,
+      valid_until: form.desired_date || null,
+      note: noteParts.length > 0 ? noteParts.join('\n') : null,
       file_url,
       file_name,
+      site: 'medal-of-finisher',
     })
     setSubmitting(false)
     if (insertErr) {
@@ -85,8 +88,8 @@ export default function QuotePage() {
       <div className="min-h-screen flex items-center justify-center px-6 pt-16 bg-warm-white">
         <div className="text-center anim-fade-up">
           <CheckCircle2 size={52} className="text-rose mx-auto mb-5" />
-          <h2 className="text-2xl font-bold text-charcoal mb-2">견적 신청이 완료되었습니다</h2>
-          <p className="text-charcoal-light text-sm mb-8">24시간 내에 연락드리겠습니다.</p>
+          <h2 className="text-2xl font-bold text-charcoal mb-2">견적이 접수되었습니다</h2>
+          <p className="text-charcoal-light text-sm mb-8">1-2 영업일 내 연락드리겠습니다.</p>
           <button
             onClick={() => { setDone(false); setForm(EMPTY); setFile(null) }}
             className="px-6 py-2.5 border border-rose text-rose rounded-full hover:bg-rose/5 transition-colors text-sm font-semibold"

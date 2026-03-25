@@ -1,32 +1,12 @@
--- 메달 사이트 견적 신청 테이블
--- Supabase SQL Editor에서 실행하세요
+-- medal-of-finisher 사이트는 allpack-ops의 quotes 테이블을 공유합니다.
+-- site 컬럼에 'medal-of-finisher' 값을 넣어 구분합니다.
+--
+-- quotes 테이블이 이미 존재한다면 아래 RLS 정책만 추가하세요.
+-- (anon 사용자의 INSERT 허용)
 
-create table if not exists site_quotes (
-  id uuid default gen_random_uuid() primary key,
-  created_at timestamptz default now() not null,
-  event_name text not null,
-  medal_type text not null default '기타',
-  quantity int,
-  desired_date date,
-  note text,
-  contact_name text not null,
-  contact_phone text not null,
-  contact_email text,
-  file_url text,
-  file_name text,
-  status text default 'new' check (status in ('new', 'contacted', 'quoted', 'confirmed', 'rejected'))
-);
+-- quotes 테이블에 site 컬럼이 없으면 추가
+alter table quotes add column if not exists site text;
 
-create index if not exists idx_site_quotes_created on site_quotes (created_at desc);
-create index if not exists idx_site_quotes_status on site_quotes (status);
-
-alter table site_quotes enable row level security;
-
-create policy "Anyone can insert site_quotes"
-  on site_quotes for insert to anon, authenticated with check (true);
-
-create policy "Authenticated users can select site_quotes"
-  on site_quotes for select to authenticated using (true);
-
-create policy "Authenticated users can update site_quotes"
-  on site_quotes for update to authenticated using (true) with check (true);
+-- anon INSERT 허용 (사이트 견적 폼용)
+create policy if not exists "Anon can insert quotes"
+  on quotes for insert to anon with check (true);
