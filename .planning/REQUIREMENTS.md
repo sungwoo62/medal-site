@@ -30,11 +30,11 @@ Requirements for current milestone. Each maps to roadmap phases.
 
 ### Email Notifications
 
-- [ ] **EMAIL-01**: 견적 접수 시 고객에게 접수 확인 이메일이 발송된다
-- [ ] **EMAIL-02**: 견적 접수 시 관리자에게 알림 이메일이 발송된다
-- [ ] **EMAIL-03**: 이메일에 견적 요약 (이벤트명, 메달 종류, 수량, 연락처)이 포함된다
-- [ ] **EMAIL-04**: Google Workspace SMTP를 통해 이메일이 발송된다
-- [ ] **EMAIL-05**: 이메일 발송 실패가 견적 폼 제출 성공에 영향을 주지 않는다
+- [x] **EMAIL-01**: 견적 접수 시 고객에게 접수 확인 이메일이 발송된다
+- [x] **EMAIL-02**: 견적 접수 시 관리자에게 알림 이메일이 발송된다
+- [x] **EMAIL-03**: 이메일에 견적 요약 (이벤트명, 메달 종류, 수량, 연락처)이 포함된다
+- [x] **EMAIL-04**: Google Workspace SMTP를 통해 이메일이 발송된다
+- [x] **EMAIL-05**: 이메일 발송 실패가 견적 폼 제출 성공에 영향을 주지 않는다
 
 ### allpack-ops Integration
 
@@ -98,11 +98,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | GALLERY-03 | Phase 4 | Pending |
 | GALLERY-04 | Phase 4 | Pending |
 | GALLERY-05 | Phase 4 | Pending |
-| EMAIL-01 | Phase 3 | Pending |
-| EMAIL-02 | Phase 3 | Pending |
-| EMAIL-03 | Phase 3 | Pending |
-| EMAIL-04 | Phase 3 | Pending |
-| EMAIL-05 | Phase 3 | Pending |
+| EMAIL-01 | Phase 3 | Complete |
+| EMAIL-02 | Phase 3 | Complete |
+| EMAIL-03 | Phase 3 | Complete |
+| EMAIL-04 | Phase 3 | Complete |
+| EMAIL-05 | Phase 3 | Complete |
 | OPS-01 | Phase 1 | Complete |
 | OPS-02 | Phase 1 | Complete |
 | OPS-03 | Phase 1 | Complete |

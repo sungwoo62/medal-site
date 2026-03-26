@@ -81,5 +81,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 |-------|----------------|--------|-----------|
 | 1. Quote Form Fix | 1/2 | In Progress|  |
 | 2. Hero Image | 1/1 | Complete   | 2026-03-26 |
-| 3. Email Notifications | 0/1 | Not started | - |
+| 3. Email Notifications | 0/1 | Planned    |  |
 | 4. Dynamic Gallery | 0/? | Not started | - |
