@@ -7,6 +7,9 @@
 -- quotes 테이블에 site 컬럼이 없으면 추가
 alter table quotes add column if not exists site text;
 
+-- contact_email 컬럼 추가 (nullable — allpack-ops 역호환, OPS-03)
+alter table quotes add column if not exists contact_email text;
+
 -- anon INSERT 허용 (사이트 견적 폼용)
 create policy if not exists "Anon can insert quotes"
   on quotes for insert to anon with check (true);
