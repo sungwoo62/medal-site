@@ -31,7 +31,7 @@ Decimal phases appear between their surrounding integers in numeric order.
   5. 비로그인(익명) 사용자가 견적을 제출할 수 있다 (RLS INSERT 정책 허용)
 **Plans**: 2 plans
 Plans:
-- [ ] 01-01-PLAN.md — Server infrastructure: SQL migration, server Supabase client, Route Handler
+- [x] 01-01-PLAN.md — Server infrastructure: SQL migration, server Supabase client, Route Handler
 - [ ] 01-02-PLAN.md — Form update: replace client-side insert with Route Handler fetch + smoke test
 **UI hint**: yes
 
@@ -75,7 +75,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Quote Form Fix | 0/2 | Planned | - |
+| 1. Quote Form Fix | 1/2 | In Progress|  |
 | 2. Hero Image | 0/? | Not started | - |
 | 3. Email Notifications | 0/? | Not started | - |
 | 4. Dynamic Gallery | 0/? | Not started | - |

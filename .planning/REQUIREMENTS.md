@@ -9,10 +9,10 @@ Requirements for current milestone. Each maps to roadmap phases.
 
 ### Quote Form
 
-- [ ] **QUOTE-01**: 견적 폼 제출이 Supabase quotes 테이블에 성공적으로 저장된다
-- [ ] **QUOTE-02**: 폼 필드가 allpack-ops quotes 테이블 스키마와 정확히 일치한다
-- [ ] **QUOTE-03**: RLS 정책이 익명 사용자의 INSERT를 허용한다
-- [ ] **QUOTE-04**: 견적 제출이 서버사이드 Route Handler를 통해 처리된다
+- [x] **QUOTE-01**: 견적 폼 제출이 Supabase quotes 테이블에 성공적으로 저장된다
+- [x] **QUOTE-02**: 폼 필드가 allpack-ops quotes 테이블 스키마와 정확히 일치한다
+- [x] **QUOTE-03**: RLS 정책이 익명 사용자의 INSERT를 허용한다
+- [x] **QUOTE-04**: 견적 제출이 서버사이드 Route Handler를 통해 처리된다
 - [ ] **QUOTE-05**: 파일 첨부 업로드가 Supabase Storage에 정상 저장된다
 
 ### Hero Image
@@ -38,9 +38,9 @@ Requirements for current milestone. Each maps to roadmap phases.
 
 ### allpack-ops Integration
 
-- [ ] **OPS-01**: medal-site와 allpack-ops가 같은 Supabase quotes 테이블을 공유한다
-- [ ] **OPS-02**: quotes 테이블의 site 컬럼으로 medal-of-finisher 데이터를 구분한다
-- [ ] **OPS-03**: DB 스키마 변경이 allpack-ops와 역호환된다 (nullable columns)
+- [x] **OPS-01**: medal-site와 allpack-ops가 같은 Supabase quotes 테이블을 공유한다
+- [x] **OPS-02**: quotes 테이블의 site 컬럼으로 medal-of-finisher 데이터를 구분한다
+- [x] **OPS-03**: DB 스키마 변경이 allpack-ops와 역호환된다 (nullable columns)
 
 ## v2 Requirements
 
@@ -86,10 +86,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| QUOTE-01 | Phase 1 | Pending |
-| QUOTE-02 | Phase 1 | Pending |
-| QUOTE-03 | Phase 1 | Pending |
-| QUOTE-04 | Phase 1 | Pending |
+| QUOTE-01 | Phase 1 | Complete |
+| QUOTE-02 | Phase 1 | Complete |
+| QUOTE-03 | Phase 1 | Complete |
+| QUOTE-04 | Phase 1 | Complete |
 | QUOTE-05 | Phase 1 | Pending |
 | HERO-01 | Phase 2 | Pending |
 | HERO-02 | Phase 2 | Pending |
@@ -103,9 +103,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | EMAIL-03 | Phase 3 | Pending |
 | EMAIL-04 | Phase 3 | Pending |
 | EMAIL-05 | Phase 3 | Pending |
-| OPS-01 | Phase 1 | Pending |
-| OPS-02 | Phase 1 | Pending |
-| OPS-03 | Phase 1 | Pending |
+| OPS-01 | Phase 1 | Complete |
+| OPS-02 | Phase 1 | Complete |
+| OPS-03 | Phase 1 | Complete |
 
 **Coverage:**
 - v1 requirements: 20 total
