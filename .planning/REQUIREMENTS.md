@@ -86,32 +86,32 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| QUOTE-01 | TBD | Pending |
-| QUOTE-02 | TBD | Pending |
-| QUOTE-03 | TBD | Pending |
-| QUOTE-04 | TBD | Pending |
-| QUOTE-05 | TBD | Pending |
-| HERO-01 | TBD | Pending |
-| HERO-02 | TBD | Pending |
-| GALLERY-01 | TBD | Pending |
-| GALLERY-02 | TBD | Pending |
-| GALLERY-03 | TBD | Pending |
-| GALLERY-04 | TBD | Pending |
-| GALLERY-05 | TBD | Pending |
-| EMAIL-01 | TBD | Pending |
-| EMAIL-02 | TBD | Pending |
-| EMAIL-03 | TBD | Pending |
-| EMAIL-04 | TBD | Pending |
-| EMAIL-05 | TBD | Pending |
-| OPS-01 | TBD | Pending |
-| OPS-02 | TBD | Pending |
-| OPS-03 | TBD | Pending |
+| QUOTE-01 | Phase 1 | Pending |
+| QUOTE-02 | Phase 1 | Pending |
+| QUOTE-03 | Phase 1 | Pending |
+| QUOTE-04 | Phase 1 | Pending |
+| QUOTE-05 | Phase 1 | Pending |
+| HERO-01 | Phase 2 | Pending |
+| HERO-02 | Phase 2 | Pending |
+| GALLERY-01 | Phase 4 | Pending |
+| GALLERY-02 | Phase 4 | Pending |
+| GALLERY-03 | Phase 4 | Pending |
+| GALLERY-04 | Phase 4 | Pending |
+| GALLERY-05 | Phase 4 | Pending |
+| EMAIL-01 | Phase 3 | Pending |
+| EMAIL-02 | Phase 3 | Pending |
+| EMAIL-03 | Phase 3 | Pending |
+| EMAIL-04 | Phase 3 | Pending |
+| EMAIL-05 | Phase 3 | Pending |
+| OPS-01 | Phase 1 | Pending |
+| OPS-02 | Phase 1 | Pending |
+| OPS-03 | Phase 1 | Pending |
 
 **Coverage:**
 - v1 requirements: 20 total
-- Mapped to phases: 0
-- Unmapped: 20
+- Mapped to phases: 20
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-26*
-*Last updated: 2026-03-26 after initial definition*
+*Last updated: 2026-03-26 after roadmap creation*
