@@ -17,8 +17,8 @@ Requirements for current milestone. Each maps to roadmap phases.
 
 ### Hero Image
 
-- [ ] **HERO-01**: 히어로 섹션에 메달 제작 관련 배경 이미지가 표시된다
-- [ ] **HERO-02**: 배경 이미지가 모바일/데스크톱에서 반응형으로 표시된다
+- [x] **HERO-01**: 히어로 섹션에 메달 제작 관련 배경 이미지가 표시된다
+- [x] **HERO-02**: 배경 이미지가 모바일/데스크톱에서 반응형으로 표시된다
 
 ### Gallery
 
@@ -91,8 +91,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | QUOTE-03 | Phase 1 | Complete |
 | QUOTE-04 | Phase 1 | Complete |
 | QUOTE-05 | Phase 1 | Pending |
-| HERO-01 | Phase 2 | Pending |
-| HERO-02 | Phase 2 | Pending |
+| HERO-01 | Phase 2 | Complete |
+| HERO-02 | Phase 2 | Complete |
 | GALLERY-01 | Phase 4 | Pending |
 | GALLERY-02 | Phase 4 | Pending |
 | GALLERY-03 | Phase 4 | Pending |

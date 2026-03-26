@@ -13,7 +13,7 @@
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [ ] **Phase 1: Quote Form Fix** - 견적 폼 "전송 실패" 버그 수정 및 Route Handler 마이그레이션
-- [ ] **Phase 2: Hero Image** - 히어로 섹션 배경 이미지 추가 및 반응형 적용
+- [x] **Phase 2: Hero Image** - 히어로 섹션 배경 이미지 추가 및 반응형 적용 (completed 2026-03-26)
 - [ ] **Phase 3: Email Notifications** - 견적 접수 시 고객 + 관리자 이메일 자동 발송
 - [ ] **Phase 4: Dynamic Gallery** - 갤러리를 Supabase Storage 기반 동적 관리로 전환
 
@@ -44,7 +44,7 @@ Plans:
   2. 모바일에서 히어로 섹션 배경 이미지가 적절하게 크롭/리사이즈되어 표시된다
 **Plans**: 1 plan
 Plans:
-- [ ] 02-01-PLAN.md — Source hero background image, place in /public/, verify responsive rendering
+- [x] 02-01-PLAN.md — Source hero background image, place in /public/, verify responsive rendering
 **UI hint**: yes
 
 ### Phase 3: Email Notifications
@@ -78,6 +78,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Quote Form Fix | 1/2 | In Progress|  |
-| 2. Hero Image | 0/1 | Planned | - |
+| 2. Hero Image | 1/1 | Complete   | 2026-03-26 |
 | 3. Email Notifications | 0/? | Not started | - |
 | 4. Dynamic Gallery | 0/? | Not started | - |

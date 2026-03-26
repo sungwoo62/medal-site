@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: executing
-stopped_at: Phase 2 UI-SPEC approved
-last_updated: "2026-03-26T06:56:29.543Z"
+status: verifying
+stopped_at: Completed 02-hero-image 02-01-PLAN.md
+last_updated: "2026-03-26T07:31:16.993Z"
 last_activity: 2026-03-26
 progress:
   total_phases: 4
-  completed_phases: 1
-  total_plans: 2
-  completed_plans: 2
+  completed_phases: 2
+  total_plans: 3
+  completed_plans: 3
   percent: 0
 ---
 
@@ -21,13 +21,13 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-26)
 
 **Core value:** 고객이 메달 제작 견적을 쉽고 빠르게 신청하고, 접수 상태를 확인할 수 있어야 한다
-**Current focus:** Phase 01 — quote-form-fix
+**Current focus:** Phase 02 — hero-image
 
 ## Current Position
 
-Phase: 2
-Plan: Not started
-Status: Ready to execute
+Phase: 02 (hero-image) — EXECUTING
+Plan: 1 of 1
+Status: Phase complete — ready for verification
 Last activity: 2026-03-26
 
 Progress: [░░░░░░░░░░] 0%
@@ -53,6 +53,7 @@ Progress: [░░░░░░░░░░] 0%
 
 *Updated after each plan completion*
 | Phase 01-quote-form-fix P01 | 2 | 2 tasks | 3 files |
+| Phase 02-hero-image P01 | 15 | 2 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -67,6 +68,7 @@ Recent decisions affecting current work:
 - [Phase 01-quote-form-fix]: Service role key in Route Handler bypasses RLS — eliminates 전송 실패 bug
 - [Phase 01-quote-form-fix]: contact_email stored as dedicated column per OPS-03 (not packed into note)
 - [Phase 01-quote-form-fix]: POST /api/quote Route Handler is Phase 3 email extension point (D-03)
+- [Phase 02-hero-image]: Image asset placement only — page.tsx already referenced /hero-bg.jpg, no code changes needed
 
 ### Pending Todos
 
@@ -81,6 +83,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-26T06:56:29.540Z
-Stopped at: Phase 2 UI-SPEC approved
-Resume file: .planning/phases/02-hero-image/02-UI-SPEC.md
+Last session: 2026-03-26T07:31:16.991Z
+Stopped at: Completed 02-hero-image 02-01-PLAN.md
+Resume file: None
