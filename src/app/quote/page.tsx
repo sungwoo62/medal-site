@@ -45,11 +45,11 @@ export default function QuotePage() {
       return
     }
     setSubmitting(true)
-    const supabase = createClient()
 
     let file_url: string | null = null
     let file_name: string | null = null
     if (file) {
+      const supabase = createClient()
       const ext = file.name.split('.').pop()
       const path = `quote-files/${Date.now()}.${ext}`
       const { error: uploadErr } = await supabase.storage.from('attachments').upload(path, file)
@@ -60,23 +60,18 @@ export default function QuotePage() {
       }
     }
 
-    const noteParts: string[] = []
-    if (form.contact_email.trim()) noteParts.push(`이메일: ${form.contact_email.trim()}`)
-    if (form.note.trim()) noteParts.push(form.note.trim())
-
-    const { error: insertErr } = await supabase.from('quotes').insert({
-      product_name: `[${form.medal_type}] ${form.event_name.trim()}`,
-      customer_name: form.contact_name.trim(),
-      customer_phone: form.contact_phone.trim(),
-      quantity: form.quantity ? parseInt(form.quantity) : 1,
-      valid_until: form.desired_date || null,
-      note: noteParts.length > 0 ? noteParts.join('\n') : null,
-      file_url,
-      file_name,
-      site: 'medal-of-finisher',
+    const res = await fetch('/api/quote', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        ...form,
+        file_url,
+        file_name,
+      }),
     })
+
     setSubmitting(false)
-    if (insertErr) {
+    if (!res.ok) {
       setError('전송에 실패했습니다. 다시 시도해 주세요.')
       return
     }
