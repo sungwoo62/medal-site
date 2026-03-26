@@ -42,7 +42,9 @@ Plans:
 **Success Criteria** (what must be TRUE):
   1. 데스크톱에서 히어로 섹션 배경에 메달 이미지가 표시된다
   2. 모바일에서 히어로 섹션 배경 이미지가 적절하게 크롭/리사이즈되어 표시된다
-**Plans**: TBD
+**Plans**: 1 plan
+Plans:
+- [ ] 02-01-PLAN.md — Source hero background image, place in /public/, verify responsive rendering
 **UI hint**: yes
 
 ### Phase 3: Email Notifications
@@ -76,6 +78,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Quote Form Fix | 1/2 | In Progress|  |
-| 2. Hero Image | 0/? | Not started | - |
+| 2. Hero Image | 0/1 | Planned | - |
 | 3. Email Notifications | 0/? | Not started | - |
 | 4. Dynamic Gallery | 0/? | Not started | - |
