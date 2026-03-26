@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { Send, Paperclip, CheckCircle2 } from 'lucide-react'
 
@@ -35,10 +35,13 @@ export default function QuotePage() {
   const [error, setError] = useState('')
   const [done, setDone] = useState(false)
 
+  useEffect(() => { console.log('[quote] client hydrated') }, [])
+
   const set = (key: keyof QuoteForm, value: string) => setForm({ ...form, [key]: value })
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    console.log('[quote] handleSubmit fired', form)
     setError('')
     if (!form.event_name.trim() || !form.contact_name.trim() || !form.contact_phone.trim()) {
       setError('행사명, 이름, 연락처는 필수입니다.')
@@ -60,22 +63,31 @@ export default function QuotePage() {
       }
     }
 
-    const res = await fetch('/api/quote', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        ...form,
-        file_url,
-        file_name,
-      }),
-    })
+    try {
+      const res = await fetch('/api/quote', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...form,
+          file_url,
+          file_name,
+        }),
+      })
 
-    setSubmitting(false)
-    if (!res.ok) {
-      setError('전송에 실패했습니다. 다시 시도해 주세요.')
-      return
+      const data = await res.json()
+      console.log('[quote] response:', res.status, data)
+
+      setSubmitting(false)
+      if (!res.ok) {
+        setError(data.error || '전송에 실패했습니다. 다시 시도해 주세요.')
+        return
+      }
+      setDone(true)
+    } catch (err) {
+      console.error('[quote] fetch error:', err)
+      setSubmitting(false)
+      setError('네트워크 오류가 발생했습니다. 다시 시도해 주세요.')
     }
-    setDone(true)
   }
 
   if (done) {
@@ -170,6 +182,7 @@ export default function QuotePage() {
           <button
             type="submit"
             disabled={submitting}
+            onClick={() => console.log('[quote] button clicked')}
             className="w-full flex items-center justify-center gap-2 px-6 py-3.5 bg-rose text-white font-semibold rounded-full hover:bg-rose-dark disabled:opacity-50 transition-all text-sm"
           >
             <Send size={15} />
