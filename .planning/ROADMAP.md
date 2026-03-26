@@ -56,7 +56,9 @@ Plans:
   2. 견적 제출 후 관리자 이메일로 알림 이메일이 도착하며 견적 요약이 포함된다
   3. 이메일에 이벤트명, 메달 종류, 수량, 연락처 정보가 포함된다
   4. 이메일 발송이 실패해도 견적 폼 제출은 성공으로 처리된다
-**Plans**: TBD
+**Plans**: 1 plan
+Plans:
+- [ ] 03-01-PLAN.md — Install nodemailer, create email module, integrate into quote Route Handler
 
 ### Phase 4: Dynamic Gallery
 **Goal**: 갤러리 페이지가 하드코딩 데이터 대신 Supabase Storage에서 이미지를 동적으로 로드한다
@@ -79,5 +81,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 |-------|----------------|--------|-----------|
 | 1. Quote Form Fix | 1/2 | In Progress|  |
 | 2. Hero Image | 1/1 | Complete   | 2026-03-26 |
-| 3. Email Notifications | 0/? | Not started | - |
+| 3. Email Notifications | 0/1 | Not started | - |
 | 4. Dynamic Gallery | 0/? | Not started | - |
