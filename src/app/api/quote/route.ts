@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@/lib/supabase/server'
+import { sendCustomerConfirmation, sendAdminNotification } from '@/lib/email'
 
 export async function POST(req: NextRequest) {
   const body = await req.json()
@@ -26,6 +27,23 @@ export async function POST(req: NextRequest) {
   if (error) {
     return NextResponse.json({ error: '전송에 실패했습니다.' }, { status: 500 })
   }
+
+  // 이메일 발송 (비차단: 실패해도 견적 접수 성공 응답 반환)
+  const emailData = {
+    eventName: body.event_name.trim(),
+    medalType: body.medal_type || '',
+    quantity: body.quantity ? parseInt(body.quantity) : 1,
+    contactName: body.contact_name.trim(),
+    contactPhone: body.contact_phone.trim(),
+    contactEmail: body.contact_email?.trim() || null,
+    desiredDate: body.desired_date || null,
+    note: body.note?.trim() || null,
+  }
+
+  await Promise.allSettled([
+    sendCustomerConfirmation(emailData),
+    sendAdminNotification(emailData),
+  ])
 
   return NextResponse.json({ ok: true })
 }
