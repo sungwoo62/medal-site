@@ -24,7 +24,7 @@ Medal of Finisher는 마라톤/스포츠 완주 메달 제작 전문 업체의 B
 - ✓ 견적 폼 Supabase 저장 오류 수정 ("전송 실패" 오류 해결) — Validated in Phase 1: Quote Form Fix
 - ✓ 히어로 섹션 배경 이미지 추가 — Validated in Phase 2: Hero Image
 - [ ] 갤러리 이미지를 Supabase Storage로 관리 (하드코딩 → 동적)
-- [ ] 견적 접수시 이메일 자동 발송 (고객 접수 확인 + 관리자 알림)
+- ✓ 견적 접수시 이메일 자동 발송 (고객 접수 확인 + 관리자 알림) — Validated in Phase 3: Email Notifications
 - [ ] 마이페이지: 이메일/비밀번호 로그인 (Supabase Auth)
 - [ ] 마이페이지: 고객 견적 현황 확인
 - [ ] allpack-ops 관리자 대시보드와 DB 연동 (같은 Supabase 프로젝트 공유)
@@ -58,7 +58,7 @@ Medal of Finisher는 마라톤/스포츠 완주 메달 제작 전문 업체의 B
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
 | Supabase DB 공유 (medal-site + allpack-ops) | 관리자가 하나의 대시보드에서 모든 견적 관리 | — Pending |
-| Google Workspace SMTP for email | 기존 도메인 이메일 인프라 활용 | — Pending |
+| Google Workspace SMTP for email | 기존 도메인 이메일 인프라 활용 | ✓ Implemented (Phase 3) |
 | Supabase Auth (이메일/비밀번호) | 고객 마이페이지 접근용, 간단한 인증 | — Pending |
 | Supabase Storage for gallery | 관리자가 동적으로 갤러리 이미지 관리 | — Pending |
 
@@ -80,4 +80,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-03-26 after Phase 2 completion*
+*Last updated: 2026-03-26 after Phase 3 completion*
