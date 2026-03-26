@@ -29,7 +29,10 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. 파일 첨부 시 Supabase Storage attachments 버킷에 정상 업로드된다
   4. allpack-ops 관리자 대시보드에서 medal-site 견적을 조회할 수 있다
   5. 비로그인(익명) 사용자가 견적을 제출할 수 있다 (RLS INSERT 정책 허용)
-**Plans**: TBD
+**Plans**: 2 plans
+Plans:
+- [ ] 01-01-PLAN.md — Server infrastructure: SQL migration, server Supabase client, Route Handler
+- [ ] 01-02-PLAN.md — Form update: replace client-side insert with Route Handler fetch + smoke test
 **UI hint**: yes
 
 ### Phase 2: Hero Image
@@ -72,7 +75,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Quote Form Fix | 0/? | Not started | - |
+| 1. Quote Form Fix | 0/2 | Planned | - |
 | 2. Hero Image | 0/? | Not started | - |
 | 3. Email Notifications | 0/? | Not started | - |
 | 4. Dynamic Gallery | 0/? | Not started | - |
