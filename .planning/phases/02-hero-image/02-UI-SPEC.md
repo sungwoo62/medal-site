@@ -52,12 +52,23 @@ Exceptions:
 
 ## Typography
 
-| Role | Size | Weight | Line Height |
-|------|------|--------|-------------|
-| Hero eyebrow label | 12px (xs) / 14px (sm) responsive | 600 semibold | 1.5 (leading-relaxed) |
-| Hero heading (h1) | 30px (3xl) / 48px (5xl) / 60px (6xl) responsive | 700 bold | 1.2 (leading-[1.2]) |
-| Hero subhead (body) | 14px (sm) / 16px (base) responsive | 400 regular | 1.625 (leading-relaxed) |
-| CTA button label | 14px (sm) | 600 semibold | n/a |
+Canonical scale (2 weights, 3 canonical sizes):
+
+| Role | Canonical Size | Weight | Line Height |
+|------|---------------|--------|-------------|
+| Hero eyebrow label | 14px | 700 bold | 1.5 |
+| Hero heading (h1) | 48px | 700 bold | 1.2 |
+| Hero subhead / body | 16px | 400 regular | 1.625 |
+| CTA button label | 14px | 700 bold | n/a |
+
+Responsive overrides (annotations only — not additional canonical sizes):
+- Eyebrow: renders at 12px on mobile (`text-xs`), 14px from `sm:` breakpoint (`sm:text-sm`)
+- Heading: renders at 30px on mobile (`text-3xl`), 48px at `md:` (`md:text-5xl`), 60px at `lg:` (`lg:text-6xl`)
+- Subhead: renders at 14px on mobile (`text-sm`), 16px from `sm:` breakpoint (`sm:text-base`)
+
+Weight rationale:
+- 700 bold: all display and label roles (eyebrow, h1, CTA) — short strings where maximum visual weight is appropriate
+- 400 regular: all running text (subhead, body) — long strings where readability at 1.625 line-height matters
 
 > Source: pre-populated from `page.tsx` lines 89–109. No typography changes in this phase — hero text is already implemented. This phase adds only the background image.
 
