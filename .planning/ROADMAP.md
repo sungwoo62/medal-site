@@ -69,7 +69,11 @@ Plans:
   2. 카테고리 필터 클릭 시 해당 카테고리의 이미지만 표시된다
   3. 기존 12개 하드코딩 갤러리 항목이 Supabase에 마이그레이션되어 표시된다
   4. 갤러리 그리드 레이아웃이 모바일/데스크톱 모두에서 유지된다
-**Plans**: TBD
+**Plans**: 3 plans
+Plans:
+- [ ] 04-01-PLAN.md — Infrastructure: GalleryItem type, data layer, API route, signed URL proxy extension, SQL seed
+- [ ] 04-02-PLAN.md — Gallery page conversion: SSR + client filter, loading/error/empty states, landing page dynamic gallery
+- [ ] 04-03-PLAN.md — allpack-ops: gallery CRUD management page + sidebar navigation
 **UI hint**: yes
 
 ## Progress
@@ -82,4 +86,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | 1. Quote Form Fix | 1/2 | In Progress|  |
 | 2. Hero Image | 1/1 | Complete   | 2026-03-26 |
 | 3. Email Notifications | 0/1 | Planned    |  |
-| 4. Dynamic Gallery | 0/? | Not started | - |
+| 4. Dynamic Gallery | 0/3 | Planned | - |
