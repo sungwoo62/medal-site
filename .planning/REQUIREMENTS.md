@@ -22,10 +22,10 @@ Requirements for current milestone. Each maps to roadmap phases.
 
 ### Gallery
 
-- [ ] **GALLERY-01**: 갤러리 이미지가 Supabase Storage에서 동적으로 로드된다
-- [ ] **GALLERY-02**: gallery_items 테이블에서 이미지 메타데이터를 조회한다
+- [x] **GALLERY-01**: 갤러리 이미지가 Supabase Storage에서 동적으로 로드된다
+- [x] **GALLERY-02**: gallery_items 테이블에서 이미지 메타데이터를 조회한다
 - [ ] **GALLERY-03**: 카테고리별 필터 기능이 동적 데이터에서도 작동한다
-- [ ] **GALLERY-04**: 기존 하드코딩된 갤러리 항목이 Supabase로 마이그레이션된다
+- [x] **GALLERY-04**: 기존 하드코딩된 갤러리 항목이 Supabase로 마이그레이션된다
 - [ ] **GALLERY-05**: 반응형 그리드 레이아웃이 유지된다
 
 ### Email Notifications
@@ -93,10 +93,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | QUOTE-05 | Phase 1 | Pending |
 | HERO-01 | Phase 2 | Complete |
 | HERO-02 | Phase 2 | Complete |
-| GALLERY-01 | Phase 4 | Pending |
-| GALLERY-02 | Phase 4 | Pending |
+| GALLERY-01 | Phase 4 | Complete |
+| GALLERY-02 | Phase 4 | Complete |
 | GALLERY-03 | Phase 4 | Pending |
-| GALLERY-04 | Phase 4 | Pending |
+| GALLERY-04 | Phase 4 | Complete |
 | GALLERY-05 | Phase 4 | Pending |
 | EMAIL-01 | Phase 3 | Complete |
 | EMAIL-02 | Phase 3 | Complete |

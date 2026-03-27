@@ -71,7 +71,7 @@ Plans:
   4. 갤러리 그리드 레이아웃이 모바일/데스크톱 모두에서 유지된다
 **Plans**: 3 plans
 Plans:
-- [ ] 04-01-PLAN.md — Infrastructure: GalleryItem type, data layer, API route, signed URL proxy extension, SQL seed
+- [x] 04-01-PLAN.md — Infrastructure: GalleryItem type, data layer, API route, signed URL proxy extension, SQL seed
 - [ ] 04-02-PLAN.md — Gallery page conversion: SSR + client filter, loading/error/empty states, landing page dynamic gallery
 - [ ] 04-03-PLAN.md — allpack-ops: gallery CRUD management page + sidebar navigation
 **UI hint**: yes
@@ -86,4 +86,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | 1. Quote Form Fix | 1/2 | In Progress|  |
 | 2. Hero Image | 1/1 | Complete   | 2026-03-26 |
 | 3. Email Notifications | 0/1 | Planned    |  |
-| 4. Dynamic Gallery | 0/3 | Planned | - |
+| 4. Dynamic Gallery | 1/3 | In Progress|  |
