@@ -1,5 +1,6 @@
 import Link from 'next/link'
-import { ArrowRight, Palette, Hammer, Truck, Award, Users, ThumbsUp, Clock, Trophy } from 'lucide-react'
+import { ArrowRight, Palette, Hammer, Truck, Award, Users, Trophy } from 'lucide-react'
+import { fetchFeaturedGalleryItems, type GalleryItem } from '@/lib/supabase/gallery'
 
 const TRUST_STATS = [
   { value: '50,000+', label: '누적 제작', suffix: '개' },
@@ -60,15 +61,6 @@ const PROCESS_STEPS = [
   },
 ]
 
-const GALLERY_ITEMS = [
-  { title: '서울국제마라톤 완주 메달', cat: '마라톤', detail: '금도금 다이캐스팅 · 1,200개' },
-  { title: '전국체육대회 금·은·동', cat: '체육대회', detail: '3종 세트 · 각 100개' },
-  { title: '기업 우수사원 시상패', cat: '시상식', detail: '아크릴+금속 복합 · 50개' },
-  { title: '창립 30주년 기념 메달', cat: '기업행사', detail: '순은 도금 한정판 · 500개' },
-  { title: '부산 해변마라톤 완주 메달', cat: '마라톤', detail: '앤틱실버 · 2,000개' },
-  { title: '올해의 교사상 시상메달', cat: '시상식', detail: '고급 금도금 · 30개' },
-]
-
 const GRADIENTS: Record<string, string> = {
   '마라톤': 'from-amber-100 to-amber-50',
   '체육대회': 'from-blue-100 to-blue-50',
@@ -76,12 +68,19 @@ const GRADIENTS: Record<string, string> = {
   '기업행사': 'from-rose-100 to-rose-50',
 }
 
-export default function HomePage() {
+export default async function HomePage() {
+  let galleryItems: GalleryItem[] = []
+  try {
+    galleryItems = await fetchFeaturedGalleryItems()
+  } catch {
+    // 갤러리 로딩 실패 시 빈 배열 — 섹션 자체를 숨김
+  }
+
   return (
     <>
       {/* ── 히어로 ── */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        {/* 배경 이미지 대용 (다크 그라디언트) */}
+        {/* 배경 이미지 */}
         <div className="absolute inset-0 bg-[url('/hero-bg.jpg')] bg-cover bg-center" />
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70" />
 
@@ -186,41 +185,47 @@ export default function HomePage() {
       </section>
 
       {/* ── 제작 사례 갤러리 ── */}
-      <section className="py-20 sm:py-24 bg-warm-gray">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="text-center mb-14 reveal">
-            <p className="text-rose text-xs font-semibold tracking-[0.2em] uppercase mb-2">Portfolio</p>
-            <h2 className="text-2xl sm:text-3xl font-bold text-charcoal">제작 사례</h2>
-          </div>
+      {galleryItems.length > 0 && (
+        <section className="py-20 sm:py-24 bg-warm-gray">
+          <div className="max-w-6xl mx-auto px-6">
+            <div className="text-center mb-14 reveal">
+              <p className="text-rose text-xs font-semibold tracking-[0.2em] uppercase mb-2">Portfolio</p>
+              <h2 className="text-2xl sm:text-3xl font-bold text-charcoal">제작 사례</h2>
+            </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {GALLERY_ITEMS.map((item) => (
-              <div
-                key={item.title}
-                className={`reveal group rounded-2xl overflow-hidden border border-border bg-white hover:shadow-lg transition-all duration-300`}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+              {galleryItems.map((item) => (
+                <div
+                  key={item.id}
+                  className="reveal group rounded-2xl overflow-hidden border border-border bg-white hover:shadow-lg transition-all duration-300"
+                >
+                  <div className={`aspect-[4/3] ${item.image_url ? '' : `bg-gradient-to-br ${GRADIENTS[item.category] ?? 'from-gray-100 to-gray-50'}`} flex items-center justify-center relative overflow-hidden`}>
+                    {item.image_url ? (
+                      <img src={`/api/secure/files?bucket=gallery&path=${item.image_url}`} alt={item.title} className="w-full h-full object-cover" />
+                    ) : (
+                      <Award size={48} className="text-charcoal/10 group-hover:text-rose/30 transition-colors duration-500" />
+                    )}
+                    <span className="absolute top-3 left-3 text-[10px] font-semibold text-rose bg-rose/10 px-2.5 py-1 rounded-full">{item.category}</span>
+                  </div>
+                  <div className="p-5">
+                    <h3 className="text-sm font-bold text-charcoal mb-1">{item.title}</h3>
+                    <p className="text-xs text-charcoal-light">{item.description}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="text-center mt-10 reveal">
+              <Link
+                href="/gallery"
+                className="inline-flex items-center gap-2 text-rose text-sm font-semibold hover:gap-3 transition-all"
               >
-                <div className={`aspect-[4/3] bg-gradient-to-br ${GRADIENTS[item.cat] ?? 'from-gray-100 to-gray-50'} flex items-center justify-center relative`}>
-                  <Award size={48} className="text-charcoal/10 group-hover:text-rose/30 transition-colors duration-500" />
-                  <span className="absolute top-3 left-3 text-[10px] font-semibold text-rose bg-rose/10 px-2.5 py-1 rounded-full">{item.cat}</span>
-                </div>
-                <div className="p-5">
-                  <h3 className="text-sm font-bold text-charcoal mb-1">{item.title}</h3>
-                  <p className="text-xs text-charcoal-light">{item.detail}</p>
-                </div>
-              </div>
-            ))}
+                전체 사례 보기 <ArrowRight size={15} />
+              </Link>
+            </div>
           </div>
-
-          <div className="text-center mt-10 reveal">
-            <Link
-              href="/gallery"
-              className="inline-flex items-center gap-2 text-rose text-sm font-semibold hover:gap-3 transition-all"
-            >
-              전체 사례 보기 <ArrowRight size={15} />
-            </Link>
-          </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* ── 견적 CTA ── */}
       <section className="py-20 sm:py-24 bg-rose relative overflow-hidden">
