@@ -34,10 +34,12 @@ export default function PaymentButton({ orderId, paymentStatus, totalAmount }: P
       return
     }
 
+    // 서버에서 isTest 결정 전이므로 prefetch 시 test URL 사용, pay 시점에 교체됨
     const script = document.createElement('script')
     script.src = 'https://stgstdpay.inicis.com/stdjs/INIStdPay.js'
     script.charset = 'UTF-8'
     script.onload = () => setScriptLoaded(true)
+    script.onerror = () => setScriptLoaded(false)
     document.head.appendChild(script)
   }, [shouldShow])
 
@@ -53,14 +55,13 @@ export default function PaymentButton({ orderId, paymentStatus, totalAmount }: P
         body: JSON.stringify({ order_id: orderId }),
       })
 
-      if (!res.ok) {
-        const data = await res.json()
-        alert(data.error || '결제 준비에 실패했습니다.')
+      const payData = await res.json().catch(() => null)
+
+      if (!res.ok || !payData) {
+        alert(payData?.error || '결제 준비에 실패했습니다.')
         setLoading(false)
         return
       }
-
-      const payData = await res.json()
 
       // 히든 폼 생성
       const existingForm = document.getElementById('inicis_pay_form')
