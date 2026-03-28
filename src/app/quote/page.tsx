@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Send, Paperclip, CheckCircle2, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Send, Paperclip, CheckCircle2 } from 'lucide-react'
 
 /* ─── 옵션 정의 ─── */
 const PLATING_OPTIONS = [
@@ -44,14 +44,6 @@ const PACKAGING_OPTIONS = [
 ] as const
 
 const MEDAL_TYPES = ['마라톤', '체육대회', '시상식', '기업행사', '기타']
-
-const STEPS = [
-  { key: 'plating', title: '도금', subtitle: '메달의 색상과 질감' },
-  { key: 'paint', title: '칠', subtitle: '표면 처리 방식' },
-  { key: 'ring', title: '고리', subtitle: '상단 고리 모양' },
-  { key: 'lanyard', title: '메달끈', subtitle: '목에 거는 끈' },
-  { key: 'packaging', title: '포장', subtitle: '완성품 포장 방식' },
-] as const
 
 type MedalOptions = {
   plating: string
@@ -162,24 +154,7 @@ function MedalPreview({ options }: { options: MedalOptions }) {
 
         {/* 메달 클리핑 */}
         <clipPath id="mc"><circle cx="120" cy="190" r="72" /></clipPath>
-
-        {/* 포장 패턴 */}
-        <pattern id="bag-stripe" x="0" y="0" width="8" height="8" patternUnits="userSpaceOnUse">
-          <rect width="8" height="8" fill="#8B7355" />
-          <rect width="4" height="8" fill="#7a6548" />
-        </pattern>
-        <pattern id="paper-texture" x="0" y="0" width="6" height="6" patternUnits="userSpaceOnUse">
-          <rect width="6" height="6" fill="#e8dcc8" />
-          <circle cx="3" cy="3" r="0.5" fill="#d8ccb8" />
-        </pattern>
-        <pattern id="suede-texture" x="0" y="0" width="4" height="4" patternUnits="userSpaceOnUse">
-          <rect width="4" height="4" fill="#2a2420" />
-          <rect x="1" y="1" width="2" height="2" fill="#302a24" opacity="0.5" />
-        </pattern>
       </defs>
-
-      {/* ── 포장 배경 (메달 뒤) ── */}
-      <PackagingBg packaging={options.packaging} />
 
       {/* ── 끈 ── */}
       <LanyardSvg lanyard={options.lanyard} />
@@ -327,49 +302,74 @@ function MedalPreview({ options }: { options: MedalOptions }) {
   )
 }
 
-function PackagingBg({ packaging }: { packaging: string }) {
+function PackagingPreview({ packaging }: { packaging: string }) {
+  if (packaging === '기본포장') return (
+    <div className="w-[100px] h-[140px] flex items-center justify-center">
+      <span className="text-xs text-charcoal-light/40">기본포장</span>
+    </div>
+  )
+
   if (packaging === '쇼핑백') return (
-    <g opacity="0.25">
-      <rect x="68" y="126" width="104" height="136" rx="3" fill="url(#bag-stripe)" />
+    <svg viewBox="0 0 100 140" className="w-[100px] h-[140px]">
+      <defs>
+        <pattern id="pkg-bag" x="0" y="0" width="8" height="8" patternUnits="userSpaceOnUse">
+          <rect width="8" height="8" fill="#8B7355" />
+          <rect width="4" height="8" fill="#7a6548" />
+        </pattern>
+      </defs>
+      <rect x="10" y="20" width="80" height="110" rx="3" fill="url(#pkg-bag)" />
+      <rect x="10" y="20" width="80" height="110" rx="3" fill="none" stroke="#6a5a48" strokeWidth="1" />
       {/* 손잡이 구멍 */}
-      <rect x="90" y="130" width="12" height="4" rx="2" fill="#5a4a38" />
-      <rect x="138" y="130" width="12" height="4" rx="2" fill="#5a4a38" />
+      <rect x="28" y="24" width="10" height="4" rx="2" fill="#5a4a38" />
+      <rect x="62" y="24" width="10" height="4" rx="2" fill="#5a4a38" />
       {/* 금색 끈 */}
-      <path d="M96,132 Q96,124 104,124 Q112,124 112,132" fill="none" stroke="#c8a030" strokeWidth="1" />
-      <path d="M128,132 Q128,124 136,124 Q144,124 144,132" fill="none" stroke="#c8a030" strokeWidth="1" />
-    </g>
+      <path d="M33,26 Q33,18 38,18 Q43,18 43,26" fill="none" stroke="#c8a030" strokeWidth="1.2" />
+      <path d="M57,26 Q57,18 62,18 Q67,18 67,26" fill="none" stroke="#c8a030" strokeWidth="1.2" />
+      {/* 로고 */}
+      <text x="50" y="80" textAnchor="middle" fontSize="7" fontWeight="bold" fill="#c8a030" opacity="0.5">MoF</text>
+    </svg>
   )
 
   if (packaging === '케이스') return (
-    <g opacity="0.22">
-      <rect x="52" y="122" width="136" height="136" rx="6" fill="url(#paper-texture)" stroke="#bba888" strokeWidth="1" />
+    <svg viewBox="0 0 100 140" className="w-[100px] h-[140px]">
+      <defs>
+        <pattern id="pkg-paper" x="0" y="0" width="6" height="6" patternUnits="userSpaceOnUse">
+          <rect width="6" height="6" fill="#e8dcc8" />
+          <circle cx="3" cy="3" r="0.5" fill="#d8ccb8" />
+        </pattern>
+      </defs>
+      <rect x="8" y="10" width="84" height="120" rx="6" fill="url(#pkg-paper)" stroke="#bba888" strokeWidth="1.2" />
       {/* 리본 */}
-      <rect x="116" y="122" width="8" height="136" fill="#c0392b" opacity="0.4" />
-      <rect x="52" y="186" width="136" height="8" fill="#c0392b" opacity="0.4" />
+      <rect x="46" y="10" width="8" height="120" fill="#c0392b" opacity="0.45" />
+      <rect x="8" y="66" width="84" height="8" fill="#c0392b" opacity="0.45" />
       {/* 윈도우 */}
-      <ellipse cx="120" cy="170" rx="24" ry="20" fill="#fff" opacity="0.3" />
-    </g>
+      <ellipse cx="50" cy="55" rx="20" ry="16" fill="#fff" opacity="0.35" stroke="#bba888" strokeWidth="0.5" />
+    </svg>
   )
 
-  if (packaging === '고급케이스') return (
-    <g opacity="0.3">
-      <rect x="52" y="122" width="136" height="136" rx="6" fill="url(#suede-texture)" stroke="#8B7355" strokeWidth="2" />
+  // 고급케이스
+  return (
+    <svg viewBox="0 0 100 140" className="w-[100px] h-[140px]">
+      <defs>
+        <pattern id="pkg-suede" x="0" y="0" width="4" height="4" patternUnits="userSpaceOnUse">
+          <rect width="4" height="4" fill="#2a2420" />
+          <rect x="1" y="1" width="2" height="2" fill="#302a24" opacity="0.5" />
+        </pattern>
+      </defs>
+      <rect x="8" y="10" width="84" height="120" rx="6" fill="url(#pkg-suede)" stroke="#8B7355" strokeWidth="2" />
       {/* 금장 힌지 */}
-      <rect x="54" y="152" width="4" height="10" rx="1" fill="#c8a030" />
-      <rect x="54" y="218" width="4" height="10" rx="1" fill="#c8a030" />
+      <rect x="10" y="35" width="4" height="8" rx="1" fill="#c8a030" />
+      <rect x="10" y="87" width="4" height="8" rx="1" fill="#c8a030" />
       {/* 잠금 장치 */}
-      <rect x="183" y="185" width="6" height="12" rx="1.5" fill="#c8a030" />
-      <circle cx="186" cy="191" r="1.5" fill="#a08020" />
+      <rect x="87" y="60" width="5" height="10" rx="1.5" fill="#c8a030" />
+      <circle cx="89.5" cy="65" r="1.5" fill="#a08020" />
       {/* 금박 로고 */}
-      <text x="120" y="250" textAnchor="middle" fontSize="5" fontWeight="bold" fill="#c8a030" opacity="0.6" letterSpacing="2">
-        MEDAL OF FINISHER
-      </text>
-      {/* 내부 패딩 테두리 */}
-      <rect x="58" y="128" width="124" height="124" rx="4" fill="none" stroke="#D4AF37" strokeWidth="0.5" opacity="0.4" />
-    </g>
+      <text x="50" y="78" textAnchor="middle" fontSize="6" fontWeight="bold" fill="#c8a030" opacity="0.6">MoF</text>
+      <text x="50" y="90" textAnchor="middle" fontSize="3.5" fontWeight="600" fill="#c8a030" opacity="0.4" letterSpacing="1">MEDAL OF FINISHER</text>
+      {/* 내부 패딩 */}
+      <rect x="14" y="16" width="72" height="108" rx="3" fill="none" stroke="#D4AF37" strokeWidth="0.5" opacity="0.4" />
+    </svg>
   )
-
-  return null
 }
 
 function LanyardSvg({ lanyard }: { lanyard: string }) {
@@ -408,61 +408,30 @@ function LanyardSvg({ lanyard }: { lanyard: string }) {
   return <g opacity="0" />
 }
 
-/* ─── 스텝 선택 UI ─── */
-function StepSelector({
-  step, options, onChange,
-}: {
-  step: number
-  options: MedalOptions
-  onChange: (key: keyof MedalOptions, value: string) => void
+/* ─── 옵션 칩 버튼 ─── */
+function OptionChip({ label, selected, color, onClick }: {
+  label: string; selected: boolean; color?: string; onClick: () => void
 }) {
-  const optionSets: Record<string, readonly { key: string; label: string }[]> = {
-    plating: PLATING_OPTIONS,
-    paint: PAINT_OPTIONS,
-    ring: RING_OPTIONS,
-    lanyard: LANYARD_OPTIONS,
-    packaging: PACKAGING_OPTIONS,
-  }
-
-  const currentStep = STEPS[step]
-  const currentOptions = optionSets[currentStep.key]
-  const currentValue = options[currentStep.key as keyof MedalOptions]
-
   return (
-    <div>
-      <div className="grid grid-cols-2 gap-2">
-        {currentOptions.map((opt) => {
-          const selected = currentValue === opt.key
-          return (
-            <button
-              key={opt.key}
-              type="button"
-              onClick={() => onChange(currentStep.key as keyof MedalOptions, opt.key)}
-              className={`px-3 py-2.5 rounded-xl border text-sm font-medium transition-all ${
-                selected
-                  ? 'border-rose bg-rose/5 text-rose ring-2 ring-rose/20'
-                  : 'border-border bg-white text-charcoal hover:border-rose/30'
-              }`}
-            >
-              {/* 도금 옵션에 색상 프리뷰 */}
-              {currentStep.key === 'plating' && (
-                <span
-                  className="inline-block w-3 h-3 rounded-full mr-1.5 align-middle border border-black/10"
-                  style={{ backgroundColor: PLATING_OPTIONS.find((p) => p.key === opt.key)?.color }}
-                />
-              )}
-              {opt.label}
-            </button>
-          )
-        })}
-      </div>
-    </div>
+    <button
+      type="button"
+      onClick={onClick}
+      className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
+        selected
+          ? 'border-rose bg-rose/10 text-rose ring-1 ring-rose/30 border'
+          : 'border border-border bg-white text-charcoal hover:border-rose/30'
+      }`}
+    >
+      {color && (
+        <span className="w-2.5 h-2.5 rounded-full border border-black/10 shrink-0" style={{ backgroundColor: color }} />
+      )}
+      {label}
+    </button>
   )
 }
 
 /* ─── 메인 페이지 ─── */
 export default function QuotePage() {
-  const [step, setStep] = useState(0)
   const [options, setOptions] = useState<MedalOptions>(DEFAULT_OPTIONS)
   const [form, setForm] = useState<QuoteForm>(EMPTY_FORM)
   const [file, setFile] = useState<File | null>(null)
@@ -485,7 +454,6 @@ export default function QuotePage() {
     try {
       const formData = new FormData()
       Object.entries(form).forEach(([key, value]) => formData.append(key, value))
-      // 메달 옵션 추가
       Object.entries(options).forEach(([key, value]) => formData.append(`medal_${key}`, value))
       if (file) formData.append('file', file)
 
@@ -512,7 +480,7 @@ export default function QuotePage() {
           <h2 className="text-2xl font-bold text-charcoal mb-2">견적이 접수되었습니다</h2>
           <p className="text-charcoal-light text-sm mb-8">1-2 영업일 내 연락드리겠습니다.</p>
           <button
-            onClick={() => { setDone(false); setForm(EMPTY_FORM); setFile(null); setOptions(DEFAULT_OPTIONS); setStep(0) }}
+            onClick={() => { setDone(false); setForm(EMPTY_FORM); setFile(null); setOptions(DEFAULT_OPTIONS) }}
             className="px-6 py-2.5 border border-rose text-rose rounded-full hover:bg-rose/5 transition-colors text-sm font-semibold"
           >
             새 견적 신청
@@ -534,34 +502,14 @@ export default function QuotePage() {
           <p className="text-charcoal-light text-sm">메달 옵션을 선택하고 견적을 요청하세요.</p>
         </div>
 
-        {/* 스텝 인디케이터 */}
-        <div className="flex items-center justify-center gap-1 mb-8">
-          {STEPS.map((s, i) => (
-            <button
-              key={s.key}
-              type="button"
-              onClick={() => setStep(i)}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
-                i === step
-                  ? 'bg-rose text-white'
-                  : i < step
-                    ? 'bg-rose/10 text-rose'
-                    : 'bg-gray-100 text-charcoal-light'
-              }`}
-            >
-              <span className="w-4 h-4 rounded-full bg-white/20 flex items-center justify-center text-[10px]">
-                {i < step ? '✓' : i + 1}
-              </span>
-              <span className="hidden sm:inline">{s.title}</span>
-            </button>
-          ))}
-        </div>
-
-        {/* 미리보기 + 스텝 선택 */}
+        {/* 미리보기 + 전체 옵션 */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
-          {/* 왼쪽: SVG 미리보기 */}
-          <div className="flex flex-col items-center justify-center bg-white rounded-2xl border border-border p-8">
-            <MedalPreview options={options} />
+          {/* 왼쪽: SVG 미리보기 (메달 + 포장) */}
+          <div className="flex flex-col items-center justify-center bg-white rounded-2xl border border-border p-8 lg:sticky lg:top-24 lg:self-start">
+            <div className="flex items-end justify-center gap-4">
+              <MedalPreview options={options} />
+              <PackagingPreview packaging={options.packaging} />
+            </div>
             <div className="mt-4 flex flex-wrap justify-center gap-2 text-[10px] text-charcoal-light">
               <span className="px-2 py-0.5 bg-gray-100 rounded-full">{options.plating}</span>
               <span className="px-2 py-0.5 bg-gray-100 rounded-full">{options.paint}</span>
@@ -571,35 +519,61 @@ export default function QuotePage() {
             </div>
           </div>
 
-          {/* 오른쪽: 스텝 선택 */}
-          <div className="bg-white rounded-2xl border border-border p-6">
-            <div className="mb-5">
-              <h2 className="text-lg font-bold text-charcoal">
-                Step {step + 1}. {STEPS[step].title}
-              </h2>
-              <p className="text-xs text-charcoal-light mt-1">{STEPS[step].subtitle}을 선택하세요.</p>
+          {/* 오른쪽: 전체 옵션 한번에 */}
+          <div className="bg-white rounded-2xl border border-border p-6 space-y-6">
+            {/* STEP 1: 도금 */}
+            <div>
+              <p className="text-[10px] font-bold text-rose tracking-wider mb-1">STEP 1</p>
+              <p className="text-sm font-bold text-charcoal mb-2">도금 <span className="font-normal text-charcoal-light text-xs">— 색상과 질감</span></p>
+              <div className="flex flex-wrap gap-1.5">
+                {PLATING_OPTIONS.map((opt) => (
+                  <OptionChip key={opt.key} label={opt.label} color={opt.color} selected={options.plating === opt.key} onClick={() => setOpt('plating', opt.key)} />
+                ))}
+              </div>
             </div>
 
-            <StepSelector step={step} options={options} onChange={setOpt} />
+            {/* STEP 2: 칠 */}
+            <div>
+              <p className="text-[10px] font-bold text-rose tracking-wider mb-1">STEP 2</p>
+              <p className="text-sm font-bold text-charcoal mb-2">칠 <span className="font-normal text-charcoal-light text-xs">— 표면 처리 방식</span></p>
+              <div className="flex flex-wrap gap-1.5">
+                {PAINT_OPTIONS.map((opt) => (
+                  <OptionChip key={opt.key} label={opt.label} selected={options.paint === opt.key} onClick={() => setOpt('paint', opt.key)} />
+                ))}
+              </div>
+            </div>
 
-            {/* 이전/다음 버튼 */}
-            <div className="flex items-center justify-between mt-6 pt-4 border-t border-border">
-              <button
-                type="button"
-                onClick={() => setStep(Math.max(0, step - 1))}
-                disabled={step === 0}
-                className="flex items-center gap-1 px-4 py-2 text-sm text-charcoal-light hover:text-charcoal disabled:opacity-30 transition-colors"
-              >
-                <ChevronLeft size={16} /> 이전
-              </button>
-              <button
-                type="button"
-                onClick={() => setStep(Math.min(STEPS.length - 1, step + 1))}
-                disabled={step === STEPS.length - 1}
-                className="flex items-center gap-1 px-4 py-2 text-sm font-semibold text-rose hover:text-rose-dark disabled:opacity-30 transition-colors"
-              >
-                다음 <ChevronRight size={16} />
-              </button>
+            {/* STEP 3: 고리 */}
+            <div>
+              <p className="text-[10px] font-bold text-rose tracking-wider mb-1">STEP 3</p>
+              <p className="text-sm font-bold text-charcoal mb-2">고리 <span className="font-normal text-charcoal-light text-xs">— 상단 고리 모양</span></p>
+              <div className="flex flex-wrap gap-1.5">
+                {RING_OPTIONS.map((opt) => (
+                  <OptionChip key={opt.key} label={opt.label} selected={options.ring === opt.key} onClick={() => setOpt('ring', opt.key)} />
+                ))}
+              </div>
+            </div>
+
+            {/* STEP 4: 끈 */}
+            <div>
+              <p className="text-[10px] font-bold text-rose tracking-wider mb-1">STEP 4</p>
+              <p className="text-sm font-bold text-charcoal mb-2">메달끈 <span className="font-normal text-charcoal-light text-xs">— 목에 거는 끈</span></p>
+              <div className="flex flex-wrap gap-1.5">
+                {LANYARD_OPTIONS.map((opt) => (
+                  <OptionChip key={opt.key} label={opt.label} selected={options.lanyard === opt.key} onClick={() => setOpt('lanyard', opt.key)} />
+                ))}
+              </div>
+            </div>
+
+            {/* STEP 5: 포장 */}
+            <div>
+              <p className="text-[10px] font-bold text-rose tracking-wider mb-1">STEP 5</p>
+              <p className="text-sm font-bold text-charcoal mb-2">포장 <span className="font-normal text-charcoal-light text-xs">— 완성품 포장 방식</span></p>
+              <div className="flex flex-wrap gap-1.5">
+                {PACKAGING_OPTIONS.map((opt) => (
+                  <OptionChip key={opt.key} label={opt.label} selected={options.packaging === opt.key} onClick={() => setOpt('packaging', opt.key)} />
+                ))}
+              </div>
             </div>
           </div>
         </div>
