@@ -6,6 +6,7 @@ import { ArrowLeft, Download, FileText, Clock, CheckCircle2 } from 'lucide-react
 import { fetchOrderById, fetchOrderFiles, fetchTaxInvoice, type OrderStatus } from '@/lib/supabase/orders'
 import TaxInvoiceForm from './TaxInvoiceForm'
 import OrderActions from './OrderActions'
+import PaymentButton from './PaymentButton'
 
 export const metadata: Metadata = {
   title: '주문 상세',
@@ -60,6 +61,17 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
             </p>
           )}
         </div>
+
+        {/* 결제하기 버튼 */}
+        {order.status !== '취소' && (
+          <div className="mb-6">
+            <PaymentButton
+              orderId={order.id}
+              paymentStatus={order.payment_status}
+              totalAmount={order.total_amount}
+            />
+          </div>
+        )}
 
         {/* 주문 취소/발주확정 버튼 */}
         {order.status !== '취소' && (

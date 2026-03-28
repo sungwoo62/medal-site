@@ -16,6 +16,8 @@ export type Order = {
   contact_email: string | null
   status: OrderStatus
   total_amount: number | null
+  payment_status: '미결제' | '결제완료' | null
+  paid_at: string | null
   site: string
   created_at: string
   updated_at: string
