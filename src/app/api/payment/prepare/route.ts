@@ -45,8 +45,8 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: '이미 결제가 완료된 주문입니다.' }, { status: 409 })
     }
 
-    const timestamp = Date.now().toString()
-    const oid = `MEDAL_${order.id}_${timestamp}`
+    const timestamp = Math.floor(Date.now() / 1000).toString()
+    const oid = `MEDAL_${order.id.substring(0, 8)}_${timestamp}`
     const price = order.total_amount.toString()
 
     const mKey = crypto.createHash('sha256').update(signKey).digest('hex')
