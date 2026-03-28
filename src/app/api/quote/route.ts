@@ -43,13 +43,25 @@ export async function POST(req: NextRequest) {
   const note = (formData.get('note') as string) || null
   const contactEmail = (formData.get('contact_email') as string) || null
 
+  // 메달 커스텀 옵션
+  const medalPlating = (formData.get('medal_plating') as string) || ''
+  const medalPaint = (formData.get('medal_paint') as string) || ''
+  const medalRing = (formData.get('medal_ring') as string) || ''
+  const medalLanyard = (formData.get('medal_lanyard') as string) || ''
+  const medalPackaging = (formData.get('medal_packaging') as string) || ''
+  const optionParts = [medalPlating, medalPaint, medalRing, medalLanyard, medalPackaging].filter(Boolean)
+  const optionSummary = optionParts.length > 0
+    ? `[옵션] 도금:${medalPlating} / 칠:${medalPaint} / 고리:${medalRing} / 끈:${medalLanyard} / 포장:${medalPackaging}`
+    : ''
+  const fullNote = [optionSummary, note?.trim()].filter(Boolean).join('\n') || null
+
   const { error } = await supabase.from('quotes').insert({
     product_name: `[${medalType}] ${eventName.trim()}`,
     customer_name: contactName.trim(),
     customer_phone: contactPhone.trim(),
     quantity: quantity ? parseInt(quantity) : 1,
     valid_until: desiredDate || null,
-    note: note?.trim() || null,
+    note: fullNote,
     contact_email: contactEmail?.trim() || null,
     file_url: fileUrl,
     file_name: fileName,
@@ -72,7 +84,7 @@ export async function POST(req: NextRequest) {
         medal_type: medalType || null,
         quantity: quantity ? parseInt(quantity) : 1,
         desired_date: desiredDate || null,
-        note: note?.trim() || null,
+        note: fullNote,
         contact_name: contactName.trim(),
         contact_phone: contactPhone.trim(),
         contact_email: contactEmail?.trim() || null,
@@ -93,7 +105,7 @@ export async function POST(req: NextRequest) {
     contactPhone: contactPhone.trim(),
     contactEmail: contactEmail?.trim() || null,
     desiredDate: desiredDate || null,
-    note: note?.trim() || null,
+    note: fullNote,
     fileUrl,
     fileName,
   }
