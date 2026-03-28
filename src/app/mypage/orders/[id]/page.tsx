@@ -3,7 +3,7 @@ import { createAuthServerClient } from '@/lib/supabase/auth-server'
 import Link from 'next/link'
 import { redirect, notFound } from 'next/navigation'
 import { ArrowLeft, Download, FileText, Clock, CheckCircle2 } from 'lucide-react'
-import { fetchOrderById, fetchOrderFiles, fetchTaxInvoice, type OrderStatus } from '@/lib/supabase/orders'
+import { fetchOrderDetail, type OrderStatus } from '@/lib/supabase/orders'
 import TaxInvoiceForm from './TaxInvoiceForm'
 import OrderActions from './OrderActions'
 import PaymentButton from './PaymentButton'
@@ -28,11 +28,8 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
 
   if (!user) redirect('/login')
 
-  const order = await fetchOrderById(id)
+  const { order, files, taxInvoice } = await fetchOrderDetail(id)
   if (!order || order.user_id !== user.id) notFound()
-
-  const files = await fetchOrderFiles(id)
-  const taxInvoice = await fetchTaxInvoice(id)
 
   const currentStepIdx = STATUS_STEPS.findIndex((s) => s.key === order.status)
 

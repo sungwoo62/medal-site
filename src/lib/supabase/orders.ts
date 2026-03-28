@@ -45,24 +45,26 @@ export type TaxInvoice = {
   created_at: string
 }
 
-export async function fetchUserOrders(userId: string): Promise<Order[]> {
+export type OrderListItem = Pick<Order, 'id' | 'event_name' | 'medal_type' | 'quantity' | 'status' | 'created_at'>
+
+export async function fetchUserOrders(userId: string): Promise<OrderListItem[]> {
   const supabase = createServerClient()
   const { data, error } = await supabase
     .from('medal_orders')
-    .select('*')
+    .select('id, event_name, medal_type, quantity, status, created_at')
     .eq('user_id', userId)
     .eq('site', 'medal-of-finisher')
     .order('created_at', { ascending: false })
 
   if (error) throw error
-  return data as Order[]
+  return data as OrderListItem[]
 }
 
 export async function fetchOrderById(orderId: string): Promise<Order | null> {
   const supabase = createServerClient()
   const { data, error } = await supabase
     .from('medal_orders')
-    .select('*')
+    .select('id, user_id, event_name, medal_type, quantity, status, total_amount, payment_status, created_at')
     .eq('id', orderId)
     .single()
 
@@ -74,7 +76,7 @@ export async function fetchOrderFiles(orderId: string): Promise<OrderFile[]> {
   const supabase = createServerClient()
   const { data, error } = await supabase
     .from('order_files')
-    .select('*')
+    .select('id, order_id, file_type, file_name, file_path, created_at')
     .eq('order_id', orderId)
     .order('created_at', { ascending: false })
 
@@ -86,7 +88,7 @@ export async function fetchTaxInvoice(orderId: string): Promise<TaxInvoice | nul
   const supabase = createServerClient()
   const { data, error } = await supabase
     .from('tax_invoices')
-    .select('*')
+    .select('id, order_id, business_name, business_number, status, created_at')
     .eq('order_id', orderId)
     .order('created_at', { ascending: false })
     .limit(1)
@@ -94,6 +96,35 @@ export async function fetchTaxInvoice(orderId: string): Promise<TaxInvoice | nul
 
   if (error) return null
   return data as TaxInvoice
+}
+
+export async function fetchOrderDetail(orderId: string) {
+  const supabase = createServerClient()
+  const [orderResult, filesResult, taxResult] = await Promise.all([
+    supabase
+      .from('medal_orders')
+      .select('id, user_id, event_name, medal_type, quantity, status, total_amount, payment_status, created_at')
+      .eq('id', orderId)
+      .single(),
+    supabase
+      .from('order_files')
+      .select('id, order_id, file_type, file_name, file_path, created_at')
+      .eq('order_id', orderId)
+      .order('created_at', { ascending: false }),
+    supabase
+      .from('tax_invoices')
+      .select('id, order_id, business_name, business_number, status, created_at')
+      .eq('order_id', orderId)
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .single(),
+  ])
+
+  return {
+    order: orderResult.error ? null : orderResult.data as Order,
+    files: filesResult.error ? [] : filesResult.data as OrderFile[],
+    taxInvoice: taxResult.error ? null : taxResult.data as TaxInvoice,
+  }
 }
 
 export async function createOrder(order: Partial<Order>): Promise<Order | null> {

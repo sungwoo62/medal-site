@@ -3,7 +3,7 @@ import { createAuthServerClient } from '@/lib/supabase/auth-server'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { Package, ChevronRight, LogOut, Settings } from 'lucide-react'
-import { fetchUserOrders, type Order, type OrderStatus } from '@/lib/supabase/orders'
+import { fetchUserOrders, type OrderListItem, type OrderStatus } from '@/lib/supabase/orders'
 
 export const metadata: Metadata = {
   title: '마이페이지',
@@ -40,7 +40,7 @@ function StatusBar({ status }: { status: OrderStatus }) {
   )
 }
 
-function OrderCard({ order }: { order: Order }) {
+function OrderCard({ order }: { order: OrderListItem }) {
   return (
     <Link
       href={`/mypage/orders/${order.id}`}
@@ -74,7 +74,7 @@ export default async function MypagePage() {
 
   if (!user) redirect('/login')
 
-  let orders: Order[] = []
+  let orders: OrderListItem[] = []
   try {
     orders = await fetchUserOrders(user.id)
   } catch {
