@@ -5,6 +5,7 @@ import { redirect, notFound } from 'next/navigation'
 import { ArrowLeft, Download, FileText, Clock, CheckCircle2 } from 'lucide-react'
 import { fetchOrderById, fetchOrderFiles, fetchTaxInvoice, type OrderStatus } from '@/lib/supabase/orders'
 import TaxInvoiceForm from './TaxInvoiceForm'
+import OrderActions from './OrderActions'
 
 export const metadata: Metadata = {
   title: '주문 상세',
@@ -13,8 +14,8 @@ export const metadata: Metadata = {
 
 const STATUS_STEPS: { key: OrderStatus; label: string }[] = [
   { key: '견적접수', label: '견적 접수' },
-  { key: '시안작업', label: '시안 작업' },
-  { key: '시안확인', label: '시안 확인' },
+  { key: '견적완료', label: '견적 완료' },
+  { key: '발주확정', label: '발주 확정' },
   { key: '제작중', label: '제작 중' },
   { key: '납품완료', label: '납품 완료' },
 ]
@@ -59,6 +60,19 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
             </p>
           )}
         </div>
+
+        {/* 주문 취소/발주확정 버튼 */}
+        {order.status !== '취소' && (
+          <div className="mb-6">
+            <OrderActions orderId={order.id} status={order.status} />
+          </div>
+        )}
+
+        {order.status === '취소' && (
+          <div className="bg-red-50 rounded-2xl border border-red-200 p-4 mb-6 text-center">
+            <p className="text-sm font-semibold text-red-600">이 주문은 취소되었습니다.</p>
+          </div>
+        )}
 
         {/* 진행상황 타임라인 */}
         <div className="bg-white rounded-2xl border border-border p-6 mb-6">

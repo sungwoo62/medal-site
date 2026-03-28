@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { createAuthServerClient } from '@/lib/supabase/auth-server'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
-import { Package, ChevronRight, LogOut } from 'lucide-react'
+import { Package, ChevronRight, LogOut, Settings } from 'lucide-react'
 import { fetchUserOrders, type Order, type OrderStatus } from '@/lib/supabase/orders'
 
 export const metadata: Metadata = {
@@ -10,14 +10,17 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 }
 
-const STATUS_STEPS: OrderStatus[] = ['견적접수', '시안작업', '시안확인', '제작중', '납품완료']
+const STATUS_STEPS: OrderStatus[] = ['견적접수', '견적완료', '발주확정', '제작중', '납품완료']
 
 const STATUS_COLORS: Record<OrderStatus, string> = {
   '견적접수': 'bg-gray-100 text-gray-600',
+  '견적완료': 'bg-blue-100 text-blue-600',
+  '발주확정': 'bg-indigo-100 text-indigo-600',
   '시안작업': 'bg-blue-100 text-blue-600',
   '시안확인': 'bg-amber-100 text-amber-600',
   '제작중': 'bg-violet-100 text-violet-600',
   '납품완료': 'bg-green-100 text-green-600',
+  '취소': 'bg-red-100 text-red-600',
 }
 
 function StatusBar({ status }: { status: OrderStatus }) {
@@ -89,15 +92,24 @@ export default async function MypagePage() {
             <h1 className="text-2xl font-bold text-charcoal">마이페이지</h1>
             <p className="text-sm text-charcoal-light mt-1">{userName}님, 안녕하세요.</p>
           </div>
-          <form action="/api/auth/signout" method="POST">
-            <button
-              type="submit"
+          <div className="flex items-center gap-4">
+            <Link
+              href="/mypage/settings"
               className="flex items-center gap-1.5 text-xs text-charcoal-light hover:text-rose transition-colors"
             >
-              <LogOut size={14} />
-              로그아웃
-            </button>
-          </form>
+              <Settings size={14} />
+              설정
+            </Link>
+            <form action="/api/auth/signout" method="POST">
+              <button
+                type="submit"
+                className="flex items-center gap-1.5 text-xs text-charcoal-light hover:text-rose transition-colors"
+              >
+                <LogOut size={14} />
+                로그아웃
+              </button>
+            </form>
+          </div>
         </div>
 
         {/* 주문 목록 */}

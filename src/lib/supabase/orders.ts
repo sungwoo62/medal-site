@@ -1,6 +1,6 @@
 import { createServerClient } from './server'
 
-export type OrderStatus = '견적접수' | '시안작업' | '시안확인' | '제작중' | '납품완료'
+export type OrderStatus = '견적접수' | '견적완료' | '발주확정' | '시안작업' | '시안확인' | '제작중' | '납품완료' | '취소'
 
 export type Order = {
   id: string
