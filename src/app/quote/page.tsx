@@ -91,169 +91,321 @@ const DEFAULT_OPTIONS: MedalOptions = {
   packaging: '기본포장',
 }
 
+/* ─── 방사선 각도 생성 ─── */
+const RADIAL_ANGLES = Array.from({ length: 16 }, (_, i) => (i * 360) / 16)
+
 /* ─── SVG 미리보기 ─── */
 function MedalPreview({ options }: { options: MedalOptions }) {
   const plating = PLATING_OPTIONS.find((p) => p.key === options.plating) ?? PLATING_OPTIONS[0]
-  const isNibushi = 'nibushi' in plating && plating.nibushi
-  const isMatte = 'matte' in plating && plating.matte
-  const isCrystal = 'crystal' in plating && plating.crystal
+  const isNibushi = 'nibushi' in plating && !!plating.nibushi
+  const isMatte = 'matte' in plating && !!plating.matte
+  const isCrystal = 'crystal' in plating && !!plating.crystal
 
   const baseColor = isNibushi ? plating.nibushi! : plating.color
   const accentColor = plating.color
 
+  // 칠 레이어 결정
+  const showPlain = options.paint === '칠없음' && !isNibushi && !isCrystal
+  const showPaint = options.paint === '일반칠'
+  const showEpoxy = options.paint === '칠+에폭'
+  const showPrint = options.paint === '인쇄'
+  const showCrystalLayer = isCrystal
+  const showNibrisiLayer = isNibushi
+
   return (
     <svg viewBox="0 0 240 340" className="w-full max-w-[240px] mx-auto drop-shadow-lg">
       <defs>
-        {/* 금속 광택 그라디언트 */}
-        <radialGradient id="metalShine" cx="40%" cy="35%" r="60%">
-          <stop offset="0%" stopColor="#fff" stopOpacity={isMatte ? 0.08 : 0.35} />
-          <stop offset="100%" stopColor="#000" stopOpacity={0.15} />
+        {/* 유광 강한 방사형 */}
+        <radialGradient id="glossy" cx="38%" cy="32%" r="65%">
+          <stop offset="0%" stopColor="#fff" stopOpacity="0.55" />
+          <stop offset="45%" stopColor="#fff" stopOpacity="0.12" />
+          <stop offset="100%" stopColor="#000" stopOpacity="0.18" />
         </radialGradient>
-        {/* 무광 오버레이 */}
-        <filter id="matteFilter">
-          <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" result="noise" />
-          <feComposite in="SourceGraphic" in2="noise" operator="in" result="matte" />
-          <feBlend in="SourceGraphic" in2="matte" mode="overlay" />
-        </filter>
-        {/* 크리스탈 효과 */}
-        <linearGradient id="crystalGrad" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="#fff" stopOpacity="0.6" />
-          <stop offset="30%" stopColor="#D8E8F8" stopOpacity="0.4" />
-          <stop offset="70%" stopColor="#B8D0E8" stopOpacity="0.5" />
-          <stop offset="100%" stopColor="#fff" stopOpacity="0.3" />
-        </linearGradient>
-        {/* 에폭 유리 반사 */}
-        <linearGradient id="epoxyShine" x1="0" y1="0" x2="0.3" y2="1">
-          <stop offset="0%" stopColor="#fff" stopOpacity="0.6" />
-          <stop offset="40%" stopColor="#fff" stopOpacity="0.05" />
-          <stop offset="100%" stopColor="#fff" stopOpacity="0.2" />
-        </linearGradient>
-        <clipPath id="medalClip"><circle cx="120" cy="190" r="72" /></clipPath>
+
+        {/* 무광 부드러운 확산 */}
+        <radialGradient id="matte-grad" cx="50%" cy="50%" r="70%">
+          <stop offset="0%" stopColor="#fff" stopOpacity="0.08" />
+          <stop offset="100%" stopColor="#000" stopOpacity="0.06" />
+        </radialGradient>
+
+        {/* 니브시 어두운 배경 3종 */}
+        <radialGradient id="nibrisi" cx="50%" cy="45%" r="60%">
+          <stop offset="0%" stopColor="#3a3020" />
+          <stop offset="100%" stopColor="#1a1510" />
+        </radialGradient>
+        <radialGradient id="nibrisi-silver" cx="50%" cy="45%" r="60%">
+          <stop offset="0%" stopColor="#38383e" />
+          <stop offset="100%" stopColor="#1a1a1e" />
+        </radialGradient>
+        <radialGradient id="nibrisi-copper" cx="50%" cy="45%" r="60%">
+          <stop offset="0%" stopColor="#3a2818" />
+          <stop offset="100%" stopColor="#1a1008" />
+        </radialGradient>
+
+        {/* 에폭 강한 유리 반사 */}
+        <radialGradient id="epoxy-shine" cx="35%" cy="28%" r="55%">
+          <stop offset="0%" stopColor="#fff" stopOpacity="0.88" />
+          <stop offset="35%" stopColor="#fff" stopOpacity="0.25" />
+          <stop offset="100%" stopColor="#fff" stopOpacity="0.02" />
+        </radialGradient>
+
+        {/* 크리스탈 투명 유리 */}
+        <radialGradient id="crystal-base" cx="45%" cy="40%" r="60%">
+          <stop offset="0%" stopColor="#f0f5fa" stopOpacity="0.7" />
+          <stop offset="50%" stopColor="#d8e4f0" stopOpacity="0.45" />
+          <stop offset="100%" stopColor="#c0d0e0" stopOpacity="0.55" />
+        </radialGradient>
+        <radialGradient id="crystal-shine" cx="32%" cy="28%" r="40%">
+          <stop offset="0%" stopColor="#fff" stopOpacity="0.9" />
+          <stop offset="100%" stopColor="#fff" stopOpacity="0" />
+        </radialGradient>
+
+        {/* 메달 클리핑 */}
+        <clipPath id="mc"><circle cx="120" cy="190" r="72" /></clipPath>
+
+        {/* 포장 패턴 */}
+        <pattern id="bag-stripe" x="0" y="0" width="8" height="8" patternUnits="userSpaceOnUse">
+          <rect width="8" height="8" fill="#8B7355" />
+          <rect width="4" height="8" fill="#7a6548" />
+        </pattern>
+        <pattern id="paper-texture" x="0" y="0" width="6" height="6" patternUnits="userSpaceOnUse">
+          <rect width="6" height="6" fill="#e8dcc8" />
+          <circle cx="3" cy="3" r="0.5" fill="#d8ccb8" />
+        </pattern>
+        <pattern id="suede-texture" x="0" y="0" width="4" height="4" patternUnits="userSpaceOnUse">
+          <rect width="4" height="4" fill="#2a2420" />
+          <rect x="1" y="1" width="2" height="2" fill="#302a24" opacity="0.5" />
+        </pattern>
       </defs>
 
-      {/* 포장 배경 */}
-      {options.packaging !== '기본포장' && <PackagingBg packaging={options.packaging} />}
+      {/* ── 포장 배경 (메달 뒤) ── */}
+      <PackagingBg packaging={options.packaging} />
 
-      {/* 끈 */}
-      <LanyardSvg lanyard={options.lanyard} accentColor={accentColor} />
+      {/* ── 끈 ── */}
+      <LanyardSvg lanyard={options.lanyard} />
 
-      {/* 고리 */}
+      {/* ── 고리 ── */}
       {options.ring === '사각고리' ? (
-        <rect x="110" y="104" width="20" height="16" rx="2" fill={baseColor} stroke={accentColor} strokeWidth="1.5" />
+        <rect x="107" y="112" width="26" height="16" rx="0" fill={baseColor} stroke={accentColor} strokeWidth="2" />
       ) : (
-        <ellipse cx="120" cy="112" rx="12" ry="8" fill="none" stroke={baseColor} strokeWidth="3" />
+        <ellipse cx="120" cy="120" rx="14" ry="10" fill="none" stroke={baseColor} strokeWidth="5.5" />
       )}
 
-      {/* 메달 본체 */}
-      <g filter={isMatte ? 'url(#matteFilter)' : undefined}>
-        <circle cx="120" cy="190" r="72" fill={baseColor} />
-        {!isCrystal && <circle cx="120" cy="190" r="72" fill="url(#metalShine)" />}
-        {isCrystal && <circle cx="120" cy="190" r="72" fill="url(#crystalGrad)" />}
-        <circle cx="120" cy="190" r="68" fill="none" stroke={accentColor} strokeWidth="1" opacity="0.5" />
-        <circle cx="120" cy="190" r="64" fill="none" stroke={accentColor} strokeWidth="0.5" opacity="0.3" />
+      {/* ── 메달 본체 ── */}
+      <circle cx="120" cy="190" r="72" fill={baseColor} />
+
+      {/* ── 엠보 디테일 (clipPath) ── */}
+      <g clipPath="url(#mc)" opacity="0.13">
+        {/* 방사선 16개 */}
+        {RADIAL_ANGLES.map((angle) => {
+          const rad = (angle * Math.PI) / 180
+          const x2 = 120 + Math.cos(rad) * 80
+          const y2 = 190 + Math.sin(rad) * 80
+          return <line key={angle} x1="120" y1="190" x2={x2} y2={y2} stroke="#000" strokeWidth="0.7" />
+        })}
+        {/* 동심원 */}
+        <circle cx="120" cy="190" r="70" fill="none" stroke="#000" strokeWidth="0.7" />
+        <circle cx="120" cy="190" r="58" fill="none" stroke="#000" strokeWidth="0.7" />
+        <circle cx="120" cy="190" r="44" fill="none" stroke="#000" strokeWidth="0.7" />
+        {/* 월계수 */}
+        <ellipse cx="68" cy="200" rx="8" ry="18" fill="none" stroke="#000" strokeWidth="0.7" />
+        <ellipse cx="172" cy="200" rx="8" ry="18" fill="none" stroke="#000" strokeWidth="0.7" />
+        {/* 중앙 "상" 텍스트 아웃라인 */}
+        <text x="120" y="198" textAnchor="middle" fontSize="28" fontWeight="bold" fill="none" stroke="#000" strokeWidth="0.8">
+          상
+        </text>
       </g>
 
-      {/* 칠 레이어 */}
-      <PaintLayer paint={options.paint} isCrystal={!!isCrystal} accentColor={accentColor} />
-
-      {/* 니브시 텍스트 */}
-      {isNibushi && (
-        <text x="120" y="196" textAnchor="middle" fontSize="18" fontWeight="bold" fill={accentColor} opacity="0.9">
-          MoF
-        </text>
+      {/* ── 칠없음 (금속광택만) ── */}
+      {showPlain && (
+        <g clipPath="url(#mc)">
+          <circle cx="120" cy="190" r="72" fill="url(#glossy)" />
+          <ellipse cx="105" cy="168" rx="32" ry="18" fill="#fff" opacity="0.45" />
+        </g>
       )}
 
-      {/* 크리스탈 로고 투영 */}
-      {isCrystal && (
-        <text x="120" y="196" textAnchor="middle" fontSize="16" fontWeight="bold" fill="#8090A0" opacity="0.5">
-          MoF
-        </text>
+      {/* ── 일반칠 ── */}
+      {showPaint && (
+        <g clipPath="url(#mc)">
+          <circle cx="120" cy="190" r="60" fill="#c0392b" />
+          <circle cx="120" cy="190" r="60" fill="none" stroke={baseColor} strokeWidth="12" opacity="0.3" />
+          <circle cx="120" cy="190" r="60" fill="url(#matte-grad)" />
+          <ellipse cx="105" cy="170" rx="28" ry="14" fill="#fff" opacity="0.18" />
+        </g>
       )}
+
+      {/* ── 칠+에폭 ── */}
+      {showEpoxy && (
+        <g clipPath="url(#mc)">
+          <circle cx="120" cy="190" r="60" fill="#1f618d" />
+          <text x="120" y="185" textAnchor="middle" fontSize="22" fontWeight="bold" fill="#D4AF37" opacity="0.9">
+            MoF
+          </text>
+          <text x="120" y="205" textAnchor="middle" fontSize="6" fontWeight="600" fill="#D4AF37" opacity="0.65" letterSpacing="1.5">
+            MEDAL OF FINISHER
+          </text>
+          <ellipse cx="108" cy="166" rx="34" ry="20" fill="url(#epoxy-shine)" opacity="0.88" />
+          {/* 측면 굴절 */}
+          <ellipse cx="148" cy="210" rx="8" ry="22" fill="#fff" opacity="0.08" transform="rotate(-20 148 210)" />
+        </g>
+      )}
+
+      {/* ── 크리스탈 ── */}
+      {showCrystalLayer && (
+        <g clipPath="url(#mc)">
+          <circle cx="120" cy="190" r="72" fill="url(#crystal-base)" />
+          {/* MoF 투영 (반투명 황금색) */}
+          <text x="120" y="194" textAnchor="middle" fontSize="24" fontWeight="bold" fill="#c8a030" opacity="0.38">
+            MoF
+          </text>
+          {/* 다이아몬드 패턴 */}
+          {[-20, 0, 20].map((dx) =>
+            [-15, 5, 25].map((dy) => (
+              <polygon
+                key={`${dx}-${dy}`}
+                points={`${120 + dx},${183 + dy} ${126 + dx},${190 + dy} ${120 + dx},${197 + dy} ${114 + dx},${190 + dy}`}
+                fill="none"
+                stroke="#a0b8d0"
+                strokeWidth="0.3"
+                opacity="0.25"
+              />
+            ))
+          )}
+          <circle cx="120" cy="190" r="72" fill="url(#crystal-shine)" />
+          {/* 테두리 굴절선 */}
+          <circle cx="120" cy="190" r="70" fill="none" stroke="#fff" strokeWidth="0.8" opacity="0.35" />
+          <circle cx="120" cy="190" r="68" fill="none" stroke="#c0d0e0" strokeWidth="0.4" opacity="0.25" />
+        </g>
+      )}
+
+      {/* ── 인쇄 ── */}
+      {showPrint && (
+        <g clipPath="url(#mc)">
+          <circle cx="120" cy="190" r="60" fill="#1a2a3a" />
+          <text x="120" y="178" textAnchor="middle" fontSize="10" fontWeight="bold" fill="#F59E0B" opacity="0.9">
+            Medal of
+          </text>
+          <text x="120" y="196" textAnchor="middle" fontSize="18" fontWeight="bold" fill="#EF4444" opacity="0.95">
+            FINISHER
+          </text>
+          <text x="120" y="212" textAnchor="middle" fontSize="6" fill="#7dd3fc" opacity="0.7" letterSpacing="2">
+            ★ 2025 ★
+          </text>
+          {/* 코팅 광택 */}
+          <ellipse cx="106" cy="170" rx="30" ry="16" fill="#fff" opacity="0.12" />
+        </g>
+      )}
+
+      {/* ── 니브시 ── */}
+      {showNibrisiLayer && (
+        <g clipPath="url(#mc)">
+          {plating.key === '신주니브시' && <circle cx="120" cy="190" r="72" fill="url(#nibrisi)" />}
+          {plating.key === '은니브시' && <circle cx="120" cy="190" r="72" fill="url(#nibrisi-silver)" />}
+          {plating.key === '동니브시' && <circle cx="120" cy="190" r="72" fill="url(#nibrisi-copper)" />}
+          <text x="120" y="186" textAnchor="middle" fontSize="26" fontWeight="bold" fill={accentColor} opacity="0.85">
+            상
+          </text>
+          <text x="120" y="210" textAnchor="middle" fontSize="7" fontWeight="600" fill={accentColor} opacity="0.55" letterSpacing="2">
+            MEDAL OF FINISHER
+          </text>
+          <ellipse cx="108" cy="168" rx="30" ry="16" fill="#fff" opacity="0.06" />
+        </g>
+      )}
+
+      {/* ── 무광 오버레이 ── */}
+      {isMatte && (
+        <g clipPath="url(#mc)">
+          <circle cx="120" cy="190" r="72" fill="url(#matte-grad)" />
+          <circle cx="120" cy="190" r="72" fill="#888" opacity="0.08" />
+        </g>
+      )}
+
+      {/* 금속 테두리 (항상 표시) */}
+      <circle cx="120" cy="190" r="72" fill="none" stroke={accentColor} strokeWidth="1.2" opacity="0.5" />
+      <circle cx="120" cy="190" r="70" fill="none" stroke={accentColor} strokeWidth="0.4" opacity="0.25" />
     </svg>
   )
 }
 
 function PackagingBg({ packaging }: { packaging: string }) {
   if (packaging === '쇼핑백') return (
-    <g opacity="0.15">
-      <rect x="70" y="130" width="100" height="120" rx="4" fill="#8B7355" />
-      <path d="M90,130 Q120,115 150,130" fill="none" stroke="#8B7355" strokeWidth="2" />
+    <g opacity="0.25">
+      <rect x="68" y="126" width="104" height="136" rx="3" fill="url(#bag-stripe)" />
+      {/* 손잡이 구멍 */}
+      <rect x="90" y="130" width="12" height="4" rx="2" fill="#5a4a38" />
+      <rect x="138" y="130" width="12" height="4" rx="2" fill="#5a4a38" />
+      {/* 금색 끈 */}
+      <path d="M96,132 Q96,124 104,124 Q112,124 112,132" fill="none" stroke="#c8a030" strokeWidth="1" />
+      <path d="M128,132 Q128,124 136,124 Q144,124 144,132" fill="none" stroke="#c8a030" strokeWidth="1" />
     </g>
   )
+
   if (packaging === '케이스') return (
-    <g opacity="0.15">
-      <rect x="55" y="125" width="130" height="130" rx="8" fill="#D4C5A9" stroke="#BBA888" strokeWidth="1" />
+    <g opacity="0.22">
+      <rect x="52" y="122" width="136" height="136" rx="6" fill="url(#paper-texture)" stroke="#bba888" strokeWidth="1" />
+      {/* 리본 */}
+      <rect x="116" y="122" width="8" height="136" fill="#c0392b" opacity="0.4" />
+      <rect x="52" y="186" width="136" height="8" fill="#c0392b" opacity="0.4" />
+      {/* 윈도우 */}
+      <ellipse cx="120" cy="170" rx="24" ry="20" fill="#fff" opacity="0.3" />
     </g>
   )
+
   if (packaging === '고급케이스') return (
-    <g opacity="0.2">
-      <rect x="55" y="125" width="130" height="130" rx="8" fill="#3A3028" stroke="#8B7355" strokeWidth="2" />
-      <rect x="60" y="130" width="120" height="120" rx="6" fill="none" stroke="#D4AF37" strokeWidth="0.5" opacity="0.5" />
+    <g opacity="0.3">
+      <rect x="52" y="122" width="136" height="136" rx="6" fill="url(#suede-texture)" stroke="#8B7355" strokeWidth="2" />
+      {/* 금장 힌지 */}
+      <rect x="54" y="152" width="4" height="10" rx="1" fill="#c8a030" />
+      <rect x="54" y="218" width="4" height="10" rx="1" fill="#c8a030" />
+      {/* 잠금 장치 */}
+      <rect x="183" y="185" width="6" height="12" rx="1.5" fill="#c8a030" />
+      <circle cx="186" cy="191" r="1.5" fill="#a08020" />
+      {/* 금박 로고 */}
+      <text x="120" y="250" textAnchor="middle" fontSize="5" fontWeight="bold" fill="#c8a030" opacity="0.6" letterSpacing="2">
+        MEDAL OF FINISHER
+      </text>
+      {/* 내부 패딩 테두리 */}
+      <rect x="58" y="128" width="124" height="124" rx="4" fill="none" stroke="#D4AF37" strokeWidth="0.5" opacity="0.4" />
     </g>
   )
+
   return null
 }
 
-function LanyardSvg({ lanyard, accentColor }: { lanyard: string; accentColor: string }) {
-  if (lanyard === '없음') return null
+function LanyardSvg({ lanyard }: { lanyard: string }) {
+  if (lanyard === '없음') return <g opacity="0" />
+
+  if (lanyard === '일반끈') return (
+    <g>
+      <rect x="98" y="8" width="18" height="112" rx="1" fill="#c0392b" />
+      <rect x="124" y="8" width="18" height="112" rx="1" fill="#2c3e50" />
+      {/* 금속 연결부 */}
+      <rect x="96" y="112" width="48" height="6" rx="1" fill="#aaa" opacity="0.5" />
+    </g>
+  )
 
   if (lanyard === '목걸이끈') return (
     <g>
-      <path d="M120,120 Q60,40 30,20" fill="none" stroke="#444" strokeWidth="2.5" strokeLinecap="round" />
-      <path d="M120,120 Q180,40 210,20" fill="none" stroke="#444" strokeWidth="2.5" strokeLinecap="round" />
+      <rect x="101" y="8" width="38" height="112" rx="1" fill="#2c3e50" />
+      {/* 금속 연결부 */}
+      <rect x="99" y="112" width="42" height="6" rx="1" fill="#aaa" opacity="0.5" />
     </g>
   )
 
   if (lanyard === '커스텀디자인요청') return (
     <g>
-      <rect x="88" y="10" width="64" height="108" rx="2" fill="#fff" stroke={accentColor} strokeWidth="1.5" />
-      {[22, 38, 54, 70, 86, 102].map((y) => (
-        <text key={y} x="120" y={y} textAnchor="middle" fontSize="6" fontWeight="bold" fill={accentColor} opacity="0.7">
+      <rect x="101" y="8" width="38" height="112" rx="1" fill="#f0f0f0" stroke="#c8a030" strokeWidth="1.5" />
+      {[38, 54, 70, 86, 102, 118].map((y) => (
+        <text key={y} x="120" y={y} textAnchor="middle" fontSize="6.5" fontWeight="bold" fill="#c8a030" opacity="0.75">
           MoF
         </text>
       ))}
+      {/* 금속 연결부 */}
+      <rect x="99" y="112" width="42" height="6" rx="1" fill="#c8a030" opacity="0.5" />
     </g>
   )
 
-  // 일반끈 (2색)
-  return (
-    <g>
-      <rect x="96" y="10" width="24" height="108" rx="1" fill="#1E40AF" />
-      <rect x="120" y="10" width="24" height="108" rx="1" fill="#DC2626" />
-    </g>
-  )
-}
-
-function PaintLayer({ paint, isCrystal, accentColor }: { paint: string; isCrystal: boolean; accentColor: string }) {
-  if (paint === '칠없음') return null
-
-  if (paint === '일반칠') return (
-    <g clipPath="url(#medalClip)">
-      <circle cx="120" cy="190" r="58" fill="#C0392B" opacity="0.7" />
-      <circle cx="120" cy="190" r="58" fill="url(#metalShine)" opacity="0.3" />
-    </g>
-  )
-
-  if (paint === '칠+에폭') return (
-    <g clipPath="url(#medalClip)">
-      <circle cx="120" cy="190" r="58" fill="#2563EB" opacity="0.75" />
-      <text x="120" y="196" textAnchor="middle" fontSize="20" fontWeight="bold" fill={accentColor} opacity="0.85">
-        MoF
-      </text>
-      <circle cx="120" cy="190" r="58" fill="url(#epoxyShine)" />
-    </g>
-  )
-
-  if (paint === '인쇄') return (
-    <g clipPath="url(#medalClip)">
-      <circle cx="120" cy="190" r="58" fill="#1E293B" opacity="0.8" />
-      <text x="120" y="182" textAnchor="middle" fontSize="11" fontWeight="bold" fill="#F59E0B">Medal of</text>
-      <text x="120" y="200" textAnchor="middle" fontSize="13" fontWeight="bold" fill="#EF4444">Finisher</text>
-      <circle cx="120" cy="190" r="58" fill="url(#metalShine)" opacity="0.2" />
-    </g>
-  )
-
-  return null
+  return <g opacity="0" />
 }
 
 /* ─── 스텝 선택 UI ─── */
