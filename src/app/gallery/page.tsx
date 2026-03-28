@@ -1,3 +1,16 @@
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: '메달 갤러리 | 제작 사례 모음',
+  description: '마라톤, 체육대회, 시상식, 기업행사 맞춤 메달 제작 사례. 다양한 디자인의 커스텀 메달 갤러리를 확인하세요.',
+  alternates: { canonical: 'https://medaloffinisher.com/gallery' },
+  openGraph: {
+    title: '메달 갤러리 | 제작 사례 모음',
+    description: '다양한 디자인의 커스텀 메달 제작 사례를 확인하세요.',
+    url: 'https://medaloffinisher.com/gallery',
+  },
+}
+
 import { fetchGalleryItems, type GalleryItem } from '@/lib/supabase/gallery'
 import GalleryClient from './GalleryClient'
 

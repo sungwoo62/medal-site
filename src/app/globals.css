@@ -61,13 +61,17 @@ body {
 .anim-d3 { animation-delay: 0.4s; opacity: 0; }
 .anim-d4 { animation-delay: 0.55s; opacity: 0; }
 
-/* Scroll reveal */
+/* Scroll reveal — 기본 보임, viewport 밖 요소만 애니메이션 */
 .reveal {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal.animate {
   opacity: 0;
   transform: translateY(30px);
   transition: opacity 0.7s ease, transform 0.7s ease;
 }
-.reveal.visible {
+.reveal.animate.visible {
   opacity: 1;
   transform: translateY(0);
 }

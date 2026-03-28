@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from 'react'
-import { Award } from 'lucide-react'
+import { useState, useEffect, useCallback } from 'react'
+import { Award, X, ChevronLeft, ChevronRight } from 'lucide-react'
 import type { GalleryItem } from '@/lib/supabase/gallery'
 
 const CATEGORIES = ['전체', '마라톤', '체육대회', '시상식', '기업행사']
@@ -15,7 +15,31 @@ const GRADIENTS: Record<string, string> = {
 
 export default function GalleryClient({ items }: { items: GalleryItem[] }) {
   const [filter, setFilter] = useState('전체')
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
   const filtered = filter === '전체' ? items : items.filter((i) => i.category === filter)
+
+  const closeLightbox = useCallback(() => setLightboxIndex(null), [])
+  const goPrev = useCallback(() => {
+    setLightboxIndex((i) => (i !== null && i > 0 ? i - 1 : i))
+  }, [])
+  const goNext = useCallback(() => {
+    setLightboxIndex((i) => (i !== null && i < filtered.length - 1 ? i + 1 : i))
+  }, [filtered.length])
+
+  useEffect(() => {
+    if (lightboxIndex === null) return
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') closeLightbox()
+      if (e.key === 'ArrowLeft') goPrev()
+      if (e.key === 'ArrowRight') goNext()
+    }
+    document.body.style.overflow = 'hidden'
+    window.addEventListener('keydown', handleKey)
+    return () => {
+      document.body.style.overflow = ''
+      window.removeEventListener('keydown', handleKey)
+    }
+  }, [lightboxIndex, closeLightbox, goPrev, goNext])
 
   return (
     <div className="min-h-screen pt-24 pb-16 px-6 bg-warm-white">
@@ -62,10 +86,11 @@ export default function GalleryClient({ items }: { items: GalleryItem[] }) {
         {/* 그리드 */}
         {filtered.length > 0 && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {filtered.map((item) => (
+            {filtered.map((item, idx) => (
               <div
                 key={item.id}
-                className="group rounded-2xl overflow-hidden border border-border bg-white hover:shadow-lg transition-all duration-300"
+                onClick={() => setLightboxIndex(idx)}
+                className="group rounded-2xl overflow-hidden border border-border bg-white hover:shadow-lg transition-all duration-300 cursor-pointer"
               >
                 <div
                   className={`aspect-[4/3] ${item.image_url ? '' : `bg-gradient-to-br ${GRADIENTS[item.category] ?? 'from-gray-100 to-gray-50'}`} flex items-center justify-center relative overflow-hidden`}
@@ -93,6 +118,64 @@ export default function GalleryClient({ items }: { items: GalleryItem[] }) {
           </div>
         )}
       </div>
+
+      {/* 라이트박스 */}
+      {lightboxIndex !== null && filtered[lightboxIndex] && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
+          onClick={closeLightbox}
+        >
+          <button
+            onClick={closeLightbox}
+            className="absolute top-4 right-4 text-white/70 hover:text-white transition-colors"
+            aria-label="닫기"
+          >
+            <X size={28} />
+          </button>
+
+          {lightboxIndex > 0 && (
+            <button
+              onClick={(e) => { e.stopPropagation(); goPrev() }}
+              className="absolute left-4 text-white/70 hover:text-white transition-colors"
+              aria-label="이전"
+            >
+              <ChevronLeft size={36} />
+            </button>
+          )}
+
+          {lightboxIndex < filtered.length - 1 && (
+            <button
+              onClick={(e) => { e.stopPropagation(); goNext() }}
+              className="absolute right-4 text-white/70 hover:text-white transition-colors"
+              aria-label="다음"
+            >
+              <ChevronRight size={36} />
+            </button>
+          )}
+
+          <div
+            className="max-w-4xl max-h-[85vh] mx-4"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {filtered[lightboxIndex].image_url ? (
+              <img
+                src={`/api/secure/files?bucket=gallery&path=${filtered[lightboxIndex].image_url}`}
+                alt={filtered[lightboxIndex].title}
+                className="max-w-full max-h-[75vh] object-contain rounded-lg"
+              />
+            ) : (
+              <div className={`w-[600px] aspect-[4/3] bg-gradient-to-br ${GRADIENTS[filtered[lightboxIndex].category] ?? 'from-gray-100 to-gray-50'} flex items-center justify-center rounded-lg`}>
+                <Award size={80} className="text-charcoal/10" />
+              </div>
+            )}
+            <div className="text-center mt-4">
+              <h3 className="text-white font-bold">{filtered[lightboxIndex].title}</h3>
+              <p className="text-white/60 text-sm mt-1">{filtered[lightboxIndex].description}</p>
+              <span className="text-white/40 text-xs">{filtered[lightboxIndex].category} · {filtered[lightboxIndex].year}</span>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

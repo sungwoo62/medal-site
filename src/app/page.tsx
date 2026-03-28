@@ -1,5 +1,17 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import { ArrowRight, Palette, Hammer, Truck, Award, Users, Trophy } from 'lucide-react'
+export const metadata: Metadata = {
+  title: '맞춤 메달 제작 전문 | 마라톤·체육대회·시상식 메달',
+  description: '마라톤, 체육대회, 시상식, 기업행사 맞춤 메달 전문 제작. 50,000개 이상 누적 제작, 고객 만족도 98%, 최단 5일 납기. 소량부터 대량까지 최고 품질의 커스텀 메달을 제작합니다.',
+  alternates: { canonical: 'https://medaloffinisher.com' },
+  openGraph: {
+    title: '맞춤 메달 제작 전문 | 마라톤·체육대회·시상식 메달',
+    description: '50,000개 이상 누적 제작, 고객 만족도 98%, 최단 5일 납기.',
+    url: 'https://medaloffinisher.com',
+  },
+}
+
 import { fetchFeaturedGalleryItems, type GalleryItem } from '@/lib/supabase/gallery'
 
 const TRUST_STATS = [
@@ -226,6 +238,42 @@ export default async function HomePage() {
           </div>
         </section>
       )}
+
+      {/* ── FAQ 미리보기 ── */}
+      <section className="py-20 sm:py-24 bg-white">
+        <div className="max-w-3xl mx-auto px-6">
+          <div className="text-center mb-14 reveal">
+            <p className="text-rose text-xs font-semibold tracking-[0.2em] uppercase mb-2">FAQ</p>
+            <h2 className="text-2xl sm:text-3xl font-bold text-charcoal">자주 묻는 질문</h2>
+          </div>
+
+          <div className="space-y-3 reveal">
+            {[
+              { q: '최소 주문 수량이 있나요?', a: '최소 100개부터 주문 가능합니다.' },
+              { q: '디자인 파일이 없어도 제작할 수 있나요?', a: '로고나 참고 이미지만 있어도 제작 가능합니다. 디자이너가 시안을 제작해드립니다.' },
+              { q: '제작 기간은 얼마나 걸리나요?', a: '주문 확정 후 약 30~40일 소요됩니다. 제작 공정 특성상 납기 단축은 어렵습니다. 여유 있게 문의해 주세요.' },
+              { q: '견적은 어떻게 받나요?', a: '상단 견적 문의 폼을 작성해주시면 이메일로 견적서를 보내드립니다.' },
+            ].map(({ q, a }, i) => (
+              <details key={i} className="group bg-warm-white rounded-xl border border-border hover:border-rose/30 transition-colors">
+                <summary className="flex items-center justify-between cursor-pointer px-5 py-4 text-sm font-semibold text-charcoal select-none">
+                  <span>{q}</span>
+                  <span className="ml-4 text-rose text-lg group-open:rotate-45 transition-transform">+</span>
+                </summary>
+                <div className="px-5 pb-4 text-sm text-charcoal-light leading-relaxed">{a}</div>
+              </details>
+            ))}
+          </div>
+
+          <div className="text-center mt-8 reveal">
+            <Link
+              href="/faq"
+              className="inline-flex items-center gap-2 text-rose text-sm font-semibold hover:gap-3 transition-all"
+            >
+              전체 질문 보기 <ArrowRight size={15} />
+            </Link>
+          </div>
+        </div>
+      </section>
 
       {/* ── 견적 CTA ── */}
       <section className="py-20 sm:py-24 bg-rose relative overflow-hidden">

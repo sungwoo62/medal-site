@@ -9,7 +9,9 @@ const navItems = [
   { href: '/', label: '홈' },
   { href: '/gallery', label: '제작 사례' },
   { href: '/process', label: '제작 안내' },
+  { href: '/faq', label: 'FAQ' },
   { href: '/quote', label: '견적 신청' },
+  { href: '/mypage', label: '마이페이지' },
 ]
 
 export default function Header() {

@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { createClient } from '@/lib/supabase/client'
 import { Send, Paperclip, CheckCircle2 } from 'lucide-react'
 
 const MEDAL_TYPES = ['마라톤', '체육대회', '시상식', '기업행사', '기타']
@@ -49,29 +48,14 @@ export default function QuotePage() {
     }
     setSubmitting(true)
 
-    let file_url: string | null = null
-    let file_name: string | null = null
-    if (file) {
-      const supabase = createClient()
-      const ext = file.name.split('.').pop()
-      const path = `quote-files/${Date.now()}.${ext}`
-      const { error: uploadErr } = await supabase.storage.from('attachments').upload(path, file)
-      if (!uploadErr) {
-        const { data } = supabase.storage.from('attachments').getPublicUrl(path)
-        file_url = data.publicUrl
-        file_name = file.name
-      }
-    }
-
     try {
+      const formData = new FormData()
+      Object.entries(form).forEach(([key, value]) => formData.append(key, value))
+      if (file) formData.append('file', file)
+
       const res = await fetch('/api/quote', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...form,
-          file_url,
-          file_name,
-        }),
+        body: formData,
       })
 
       const data = await res.json()

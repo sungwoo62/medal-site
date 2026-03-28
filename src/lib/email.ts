@@ -1,4 +1,4 @@
-import nodemailer from 'nodemailer'
+import { Resend } from 'resend'
 
 type QuoteEmailData = {
   eventName: string;
@@ -9,35 +9,31 @@ type QuoteEmailData = {
   contactEmail: string | null;
   desiredDate: string | null;
   note: string | null;
+  fileUrl: string | null;
+  fileName: string | null;
 };
 
-function createTransporter() {
-  if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
+function createClient() {
+  if (!process.env.RESEND_API_KEY) {
     return null;
   }
-  return nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 465,
-    secure: true,
-    auth: {
-      user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASS,
-    },
-  });
+  return new Resend(process.env.RESEND_API_KEY);
 }
+
+const FROM = 'Medal of Finisher <hello@medaloffinisher.com>';
 
 export async function sendCustomerConfirmation(data: QuoteEmailData): Promise<void> {
   if (!data.contactEmail) return;
 
-  const transporter = createTransporter();
-  if (!transporter) {
-    console.warn('[email] SMTP_USER or SMTP_PASS not set — skipping customer confirmation');
+  const resend = createClient();
+  if (!resend) {
+    console.warn('[email] RESEND_API_KEY not set — skipping customer confirmation');
     return;
   }
 
   try {
-    await transporter.sendMail({
-      from: process.env.SMTP_USER,
+    await resend.emails.send({
+      from: FROM,
       to: data.contactEmail,
       replyTo: 'hello@medaloffinisher.com',
       subject: '[메달오브피니셔] 견적 접수 확인',
@@ -72,6 +68,12 @@ export async function sendCustomerConfirmation(data: QuoteEmailData): Promise<vo
                   <td style="padding: 8px 0; color: #888;">희망 납기일</td>
                   <td style="padding: 8px 0; font-weight: 600;">${data.desiredDate || '-'}</td>
                 </tr>
+                ${data.fileUrl ? `
+                <tr>
+                  <td style="padding: 8px 0; color: #888;">첨부파일</td>
+                  <td style="padding: 8px 0; font-weight: 600;"><a href="${data.fileUrl}" style="color: #e11d48; text-decoration: none;">${data.fileName || '파일 보기'}</a></td>
+                </tr>
+                ` : ''}
               </table>
             </div>
 
@@ -91,15 +93,15 @@ export async function sendCustomerConfirmation(data: QuoteEmailData): Promise<vo
 }
 
 export async function sendAdminNotification(data: QuoteEmailData): Promise<void> {
-  const transporter = createTransporter();
-  if (!transporter) {
-    console.warn('[email] SMTP_USER or SMTP_PASS not set — skipping admin notification');
+  const resend = createClient();
+  if (!resend) {
+    console.warn('[email] RESEND_API_KEY not set — skipping admin notification');
     return;
   }
 
   try {
-    await transporter.sendMail({
-      from: process.env.SMTP_USER,
+    await resend.emails.send({
+      from: FROM,
       to: 'hello@medaloffinisher.com',
       replyTo: data.contactEmail || undefined,
       subject: `[새 견적] ${data.eventName} - ${data.contactName}`,
@@ -128,6 +130,12 @@ export async function sendAdminNotification(data: QuoteEmailData): Promise<void>
                   <td style="padding: 8px 0; color: #888;">희망 납기일</td>
                   <td style="padding: 8px 0; font-weight: 600;">${data.desiredDate || '-'}</td>
                 </tr>
+                ${data.fileUrl ? `
+                <tr>
+                  <td style="padding: 8px 0; color: #888;">첨부파일</td>
+                  <td style="padding: 8px 0; font-weight: 600;"><a href="${data.fileUrl}" style="color: #e11d48; text-decoration: none;">${data.fileName || '파일 보기'}</a></td>
+                </tr>
+                ` : ''}
               </table>
             </div>
 
